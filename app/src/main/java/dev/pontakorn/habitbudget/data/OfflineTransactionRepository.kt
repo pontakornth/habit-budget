@@ -1,6 +1,8 @@
 package dev.pontakorn.habitbudget.data
 
 import kotlinx.coroutines.flow.Flow
+import java.util.Calendar
+import java.util.Date
 
 class OfflineTransactionRepository(private val transactionDao: TransactionDao) :
     TransactionRepository {
@@ -14,11 +16,25 @@ class OfflineTransactionRepository(private val transactionDao: TransactionDao) :
 
     // TODO: Implement get transaction with logic
     override fun getWithMonthAndYear(month: Int, year: Int) {
-        TODO("Not yet implemented")
+        val calendar = Calendar.getInstance()
+        // First
+        calendar.set(year, month, 1)
+        val currentMonth = calendar.time
+        // Yes, Calendar can handle this.
+        calendar.set(year, month + 1, 1)
+        val nextMonth = calendar.time
+        return transactionDao.getDuring(currentMonth, nextMonth)
     }
 
     override fun getWithMonthAndYear(month: Int, year: Int, transactionType: TransactionType) {
-        TODO("Not yet implemented")
+        val calendar = Calendar.getInstance()
+        // First
+        calendar.set(year, month, 1)
+        val currentMonth = calendar.time
+        // Yes, Calendar can handle this.
+        calendar.set(year, month + 1, 1)
+        val nextMonth = calendar.time
+        return transactionDao.getDuring(currentMonth, nextMonth, transactionType)
     }
 
     override suspend fun insertTransaction(transaction: Transaction) {
