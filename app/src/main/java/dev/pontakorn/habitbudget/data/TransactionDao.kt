@@ -19,10 +19,10 @@ interface TransactionDao {
     fun getAll(transactionType: TransactionType): Flow<List<Transaction>>
 
     @Query("SELECT * from `transaction` WHERE transaction_time >= :timeBegin AND transaction_time < :timeBefore")
-    fun getDuring(timeBegin: Date, timeBefore: Date)
+    fun getDuring(timeBegin: Date, timeBefore: Date): Flow<List<Transaction>>
 
     @Query("SELECT * from `transaction` WHERE transaction_time >= :timeBegin AND transaction_time < :timeBefore AND transaction_type = :transactionType")
-    fun getDuring(timeBegin: Date, timeBefore: Date, transactionType: TransactionType)
+    fun getDuring(timeBegin: Date, timeBefore: Date, transactionType: TransactionType): Flow<List<Transaction>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTransaction(transaction: Transaction)
