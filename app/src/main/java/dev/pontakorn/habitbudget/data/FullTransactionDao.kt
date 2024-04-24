@@ -1,5 +1,6 @@
 package dev.pontakorn.habitbudget.data
 
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -40,11 +41,18 @@ interface FullTransactionDao {
                 "WHERE t.transaction_time >= :timeBegin AND t.transaction_time < :timeEnd " +
                 "AND t.transaction_type = :transactionType"
     )
-    fun getDuringByType(timeBegin: Date, timeEnd: Date, transactionType: TransactionType): Flow<List<FullTransaction>>
+    fun getDuringByType(
+        timeBegin: Date,
+        timeEnd: Date,
+        transactionType: TransactionType
+    ): Flow<List<FullTransaction>>
 
     @Insert
     suspend fun insertTransaction(transaction: Transaction)
 
     @Update
     suspend fun updateTransaction(transaction: Transaction)
+
+    @Delete
+    suspend fun deleteTransaction(transaction: Transaction)
 }
