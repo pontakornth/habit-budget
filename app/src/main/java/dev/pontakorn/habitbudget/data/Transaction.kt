@@ -24,7 +24,7 @@ data class Transaction(
     // Source wallet ID is a must
     @ColumnInfo(name = "source_wallet_id") val sourceWalletId: Int,
     // Destination wallet ID is only when transfer
-    @ColumnInfo(name = "destination_wallet_id") val destinationWalletId: Int,
+    @ColumnInfo(name = "destination_wallet_id") val destinationWalletId: Int?,
     val amount: Int,
 
     @ColumnInfo("transaction_time")
