@@ -13,16 +13,16 @@ import java.util.Date
 interface TransactionDao {
 
     @Query("SELECT * from `transaction`")
-    fun getAll(): Flow<List<Transaction>>
+    fun getByType(): Flow<List<Transaction>>
 
     @Query("SELECT * from `transaction` WHERE transaction_type = :transactionType")
-    fun getAll(transactionType: TransactionType): Flow<List<Transaction>>
+    fun getByType(transactionType: TransactionType): Flow<List<Transaction>>
 
-    @Query("SELECT * from `transaction` WHERE transaction_time >= :timeBegin AND transaction_time < :timeBefore")
-    fun getDuring(timeBegin: Date, timeBefore: Date): Flow<List<Transaction>>
+    @Query("SELECT * from `transaction` WHERE transaction_time >= :timeBegin AND transaction_time < :timeEnd")
+    fun getByTypeDuring(timeBegin: Date, timeEnd: Date): Flow<List<Transaction>>
 
-    @Query("SELECT * from `transaction` WHERE transaction_time >= :timeBegin AND transaction_time < :timeBefore AND transaction_type = :transactionType")
-    fun getDuring(timeBegin: Date, timeBefore: Date, transactionType: TransactionType): Flow<List<Transaction>>
+    @Query("SELECT * from `transaction` WHERE transaction_time >= :timeBegin AND transaction_time < :timeEnd AND transaction_type = :transactionType")
+    fun getByTypeDuring(timeBegin: Date, timeEnd: Date, transactionType: TransactionType): Flow<List<Transaction>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTransaction(transaction: Transaction)
