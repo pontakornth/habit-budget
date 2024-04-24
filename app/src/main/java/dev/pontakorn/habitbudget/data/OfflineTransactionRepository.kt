@@ -14,7 +14,6 @@ class OfflineTransactionRepository(private val transactionDao: TransactionDao) :
         return transactionDao.getAll(transactionType)
     }
 
-    // TODO: Implement get transaction with logic
     override fun getWithMonthAndYear(month: Int, year: Int): Flow<List<Transaction>> {
         val calendar = Calendar.getInstance()
         // First
