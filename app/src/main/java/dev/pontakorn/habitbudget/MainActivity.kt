@@ -18,7 +18,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,13 +32,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HabitBudgetTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                MainScreenWithNavbar()
             }
         }
     }
@@ -66,7 +62,9 @@ fun MainScreenWithNavbar() {
                     },
                     icon = { Icon(imageVector = navInfo.icon, contentDescription = navInfo.label) },
                     label = {
-                        Text(text = navInfo.label)
+                        Text(
+                            text = navInfo.label, fontSize = 12.sp, textAlign = TextAlign.Center
+                        )
                     }
                 )
             }
