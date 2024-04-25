@@ -21,7 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pontakorn.habitbudget.data.Transaction
+import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
+import java.util.Date
 
 @Composable
 fun TransactionScreen(
@@ -32,7 +34,7 @@ fun TransactionScreen(
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(vertical = 16.dp, horizontal = 32.dp),
             color = MaterialTheme.colorScheme.background
         ) {
             Column(
@@ -78,26 +80,60 @@ fun TransactionScreen(
                 if (transactions.isEmpty()) {
                     Text(
                         modifier = Modifier.padding(vertical = 16.dp),
-                        color = Color.Gray, text = "No transaction")
-                }
-                for (transaction in transactions) {
-                    TransactionItem(
-                        // TODO: Use transaction title
-                        transactionTitle = "Placeholder",
-                        // TODO: Convert satang to baht
-                        transactionAmount = transaction.amount.toDouble(),
-                        // TODO: Use actual icon
-                        transactionIcon = Icons.Outlined.Star,
-                        transactionDate = transaction.transactionTime
+                        color = Color.Gray, text = "No transaction"
                     )
+                }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 0.dp)
+                ) {
+                    for (transaction in transactions) {
+                        TransactionItem(
+                            // TODO: Use transaction title
+                            transactionTitle = "Placeholder",
+                            // TODO: Convert satang to baht
+                            transactionAmount = transaction.amount.toDouble(),
+                            // TODO: Use actual icon
+                            transactionIcon = Icons.Outlined.Star,
+                            transactionDate = transaction.transactionTime
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun TransactionScreenPreview() {
     TransactionScreen()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TransactionScreenPreviewWithTransaction() {
+    TransactionScreen(
+        transactions = listOf(
+            Transaction(
+                id = 99,
+                categoryId = null,
+                transactionType = TransactionType.EXPENSE,
+                sourceWalletId = 99,
+                amount = 999,
+                destinationWalletId = null,
+                transactionTime = Date(999999999)
+            ),
+            Transaction(
+                id = 99,
+                categoryId = null,
+                transactionType = TransactionType.EXPENSE,
+                sourceWalletId = 99,
+                amount = 999,
+                destinationWalletId = null,
+                transactionTime = Date(999999999)
+            ),
+        )
+    )
 }

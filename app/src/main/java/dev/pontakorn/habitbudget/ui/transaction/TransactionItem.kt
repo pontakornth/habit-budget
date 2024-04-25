@@ -34,18 +34,18 @@ fun TransactionItem(
     HabitBudgetTheme {
         ElevatedCard(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(1f)
                 .padding(4.dp),
         ) {
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Icon(imageVector = transactionIcon, contentDescription = transactionTitle)
                 // TODO: Add wallet icon
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(text = transactionTitle)
