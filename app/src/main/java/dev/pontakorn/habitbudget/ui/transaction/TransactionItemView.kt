@@ -20,6 +20,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
 
 @Composable
@@ -29,6 +32,8 @@ fun TransactionItemView(
     transactionIcon: ImageVector,
     transactionDate: Date
 ) {
+    val formatter = DateTimeFormatter.ofPattern("dd/MMMM/yyyy")
+    val localTransactionDate = LocalDateTime.ofInstant(transactionDate.toInstant(), ZoneId.systemDefault())
     HabitBudgetTheme {
         ElevatedCard(
             modifier = Modifier
@@ -55,7 +60,7 @@ fun TransactionItemView(
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(text = transactionTitle)
-                    Text(text = "12/mo12")
+                    Text(text = localTransactionDate.format(formatter))
                 }
 
                 Text(text = transactionAmount.toString())
@@ -72,6 +77,6 @@ fun TransactionItemPreview() {
         transactionTitle = "Example transaction",
         transactionAmount = 99.99,
         transactionIcon = Icons.Outlined.Star,
-        transactionDate = Date(1713799047226)
+        transactionDate = Date()
     )
 }
