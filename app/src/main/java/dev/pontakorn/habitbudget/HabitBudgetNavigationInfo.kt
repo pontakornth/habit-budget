@@ -21,7 +21,7 @@ data class HabitBudgetNavigationInfo(
                 route = DestinationScreens.Transactions.route
             ),
             HabitBudgetNavigationInfo(
-                label = "Habit Tracking",
+                label = "Habit",
                 icon = Icons.Outlined.DateRange,
                 route = DestinationScreens.HabitTracking.route
             ),
