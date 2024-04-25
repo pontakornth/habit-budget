@@ -88,7 +88,7 @@ fun TransactionScreen(
                     modifier = Modifier.padding(vertical = 16.dp, horizontal = 0.dp)
                 ) {
                     for (transaction in transactions) {
-                        TransactionItem(
+                        TransactionItemView(
                             // TODO: Use transaction title
                             transactionTitle = "Placeholder",
                             // TODO: Convert satang to baht
