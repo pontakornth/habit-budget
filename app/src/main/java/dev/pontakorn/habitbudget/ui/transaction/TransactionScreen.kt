@@ -27,6 +27,9 @@ import java.util.Date
 
 @Composable
 fun TransactionScreen(
+    income: Double,
+    expense: Double,
+    remaining: Double,
     transactions: List<Transaction> = listOf()
 ) {
     // TODO: Use transactions
@@ -62,19 +65,19 @@ fun TransactionScreen(
 
                     ) {
                         Text(text = "Income", textAlign = TextAlign.End)
-                        Text(text = "99999", textAlign = TextAlign.End)
+                        Text(text = income.toString(), textAlign = TextAlign.End)
                     }
                     Column(
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(text = "Expense", textAlign = TextAlign.End)
-                        Text(text = "99999", textAlign = TextAlign.End)
+                        Text(text = expense.toString(), textAlign = TextAlign.End)
                     }
                     Column(
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(text = "Remaining", textAlign = TextAlign.End)
-                        Text(text = "99999", textAlign = TextAlign.End)
+                        Text(text = remaining.toString(), textAlign = TextAlign.End)
                     }
                 }
                 if (transactions.isEmpty()) {
@@ -108,13 +111,20 @@ fun TransactionScreen(
 @Preview(showBackground = true)
 @Composable
 fun TransactionScreenPreview() {
-    TransactionScreen()
+    TransactionScreen(
+        income = 9999.0,
+        expense = 9999.0,
+        remaining = 0.0
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun TransactionScreenPreviewWithTransaction() {
     TransactionScreen(
+        income = 9999.0,
+        expense = 9999.0,
+        remaining = 0.0,
         transactions = listOf(
             Transaction(
                 id = 99,
