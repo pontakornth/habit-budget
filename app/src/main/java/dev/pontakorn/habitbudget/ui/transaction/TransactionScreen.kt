@@ -8,10 +8,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +39,16 @@ fun TransactionScreen(
     remaining: Double,
     transactions: List<Transaction> = listOf()
 ) {
+
+
+    // TODO: Use actual earliest date.
+    val months = listOf("Jan 2024", "Feb 2024", "Mar 2024")
+    var monthPickerExpanded by remember {
+        mutableStateOf(false)
+    }
+    var selectedMonth by remember {
+        mutableStateOf("Jan 2024")
+    }
     // TODO: Use transactions
     HabitBudgetTheme {
         Surface(
@@ -51,7 +68,6 @@ fun TransactionScreen(
                     fontSize = 48.sp,
                     modifier = Modifier.fillMaxWidth()
                 )
-                // TODO: Use actual lazy columns or something
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -86,6 +102,22 @@ fun TransactionScreen(
                         color = Color.Gray, text = "No transaction"
                     )
                 }
+                Column {
+                    OutlinedButton(onClick = { monthPickerExpanded = true }) {
+                        Text(text = selectedMonth)
+                    }
+                    DropdownMenu(
+                        expanded = monthPickerExpanded,
+                        onDismissRequest = { monthPickerExpanded = false }) {
+                        months.forEach { choice ->
+                            DropdownMenuItem(text = { Text(text = choice) }, onClick = {
+                                selectedMonth = choice
+                                monthPickerExpanded = false
+                            })
+                        }
+                    }
+                }
+                // TODO: Use actual lazy columns or something
                 Column(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.padding(vertical = 16.dp, horizontal = 0.dp)
