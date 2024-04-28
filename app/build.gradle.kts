@@ -66,6 +66,10 @@ dependencies {
     // To use Kotlin Symbol Processing (KSP)
     ksp(libs.room.compiler)
 
+    // Compose calendar
+    implementation(libs.composecalendar)
+    implementation(libs.composecalendar.kotlinx.datetime)
+
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.core.ktx)
