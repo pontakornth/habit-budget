@@ -25,7 +25,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.pontakorn.habitbudget.ui.habit.HabitTracking
+import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
+import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
+import dev.pontakorn.habitbudget.ui.wallets.WalletScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,17 +81,23 @@ fun MainScreenWithNavbar() {
             modifier = Modifier.padding(paddingValues)
 
         ) {
+            // TODO: Replace dummy view with view + viewmodel (actual logic)
             composable(route = DestinationScreens.Transactions.route) {
-                TransactionsScreen()
+                TransactionScreen(
+                    income = 999.0,
+                    expense = 999.0,
+                    remaining = 0.0,
+
+                )
             }
             composable(route = DestinationScreens.HabitTracking.route) {
-                // TODO: Add habit tracking screen
+                HabitTracking()
             }
             composable(route = DestinationScreens.Wallets.route) {
-                // TODO: Add wallet screen
+                WalletScreen()
             }
             composable(route = DestinationScreens.Settings.route) {
-                // TODO: Add setting screen
+                SettingsScreen()
             }
 
         }
