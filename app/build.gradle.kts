@@ -75,6 +75,9 @@ dependencies {
     implementation(libs.composecalendar.kotlinx.datetime)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.core.ktx)
