@@ -1,4 +1,4 @@
-package dev.pontakorn.habitbudget.ui.categories
+package dev.pontakorn.habitbudget.ui.icons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,9 +27,10 @@ import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 
 @Composable
-fun CategoryIconScreen(
-    categoryIcons: List<CategoryIconInfo>,
-    onSelectCategoryIcon: (CategoryIconInfo) -> Unit = {},
+fun IconSelectionScreen(
+    title: String = "Choose Category Icon",
+    categoryIcons: List<IconInfo>,
+    onSelectCategoryIcon: (IconInfo) -> Unit = {},
     onBackButtonClick: () -> Unit = {}
 ) {
     HabitBudgetTheme {
@@ -44,7 +45,7 @@ fun CategoryIconScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Select Category Icon",
+                    text = title,
                     fontWeight = FontWeight.Bold,
                     fontSize = 48.sp,
                     modifier = Modifier.fillMaxWidth(),
@@ -72,7 +73,7 @@ fun CategoryIconScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(onClick = onBackButtonClick) {
                         Text(text = "Back")
                     }
                 }
@@ -84,6 +85,6 @@ fun CategoryIconScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun CategoryIconScreenPreview() {
-    CategoryIconScreen(allCategoryIcons)
+fun IconSelectionScreenPreview() {
+    IconSelectionScreen(categoryIcons = allIcons)
 }
