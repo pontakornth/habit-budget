@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dev.pontakorn.habitbudget.data.CategoryType
+import dev.pontakorn.habitbudget.ui.icons.IconInfo
+import dev.pontakorn.habitbudget.ui.icons.allIcons
 
 abstract class EditCategoryViewModel() : ViewModel() {
     var categoryName by mutableStateOf("")
     private set
-    var categoryIcon by mutableStateOf(allCategoryIcons[0])
+    var categoryIcon by mutableStateOf(allIcons[0])
     private set
     var categoryType by mutableStateOf(CategoryType.EXPENSE)
     private set
@@ -18,7 +20,7 @@ abstract class EditCategoryViewModel() : ViewModel() {
         categoryName = newCategoryName
     }
 
-    fun onChangeCategoryIcon(newCategoryIcon: CategoryIconInfo) {
+    fun onChangeCategoryIcon(newCategoryIcon: IconInfo) {
         categoryIcon = newCategoryIcon
     }
 
