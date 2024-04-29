@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedIconButton
@@ -20,35 +17,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pontakorn.habitbudget.R
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 
 @Composable
-fun CategoryIconScreen() {
-    // TODO: Find something to hold both icon and name
-    val iconList: List<ImageVector> = listOf(
-        Icons.Filled.ShoppingCart,
-        ImageVector.vectorResource(R.drawable.baseline_fastfood_24),
-        ImageVector.vectorResource(R.drawable.baseline_local_dining_24),
-        ImageVector.vectorResource(R.drawable.baseline_local_drink_24),
-        ImageVector.vectorResource(R.drawable.baseline_local_taxi_24),
-        ImageVector.vectorResource(R.drawable.baseline_videogame_asset_24),
-        ImageVector.vectorResource(R.drawable.baseline_wallet_24),
-        ImageVector.vectorResource(R.drawable.baseline_weekend_24),
-        ImageVector.vectorResource(R.drawable.baseline_medical_services_24),
-        ImageVector.vectorResource(R.drawable.baseline_woman_24),
-        ImageVector.vectorResource(R.drawable.baseline_work_24),
-        Icons.Filled.Home,
-    )
-    // Due to lack of arts, icons are hardcoded (or use some files)
+fun CategoryIconScreen(
+    categoryIcons: List<CategoryIconInfo>,
+    onSelectCategoryIcon: (CategoryIconInfo) -> Unit = {},
+    onBackButtonClick: () -> Unit = {}
+) {
     HabitBudgetTheme {
         Surface(
             modifier = Modifier
@@ -73,9 +56,12 @@ fun CategoryIconScreen() {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
 
                 ) {
-                    items(iconList) { icon ->
-                        OutlinedIconButton(onClick = { /*TODO*/ }) {
-                            Icon(imageVector = icon, contentDescription = "icon")
+                    items(categoryIcons) { icon ->
+                        OutlinedIconButton(onClick = { onSelectCategoryIcon(icon) }) {
+                            Icon(
+                                painter = painterResource(icon.resourceId),
+                                contentDescription = icon.iconName
+                            )
                         }
                     }
                 }
@@ -99,5 +85,5 @@ fun CategoryIconScreen() {
 @Preview(showBackground = true)
 @Composable
 fun CategoryIconScreenPreview() {
-    CategoryIconScreen()
+    CategoryIconScreen(allCategoryIcons)
 }
