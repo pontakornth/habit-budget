@@ -16,10 +16,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pontakorn.habitbudget.data.Category
+import dev.pontakorn.habitbudget.data.CategoryType
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
-fun CategoriesScreen() {
+fun CategoriesScreen(
+    categories: List<Category> = emptyList(),
+    onChangeCategoryType: (CategoryType) -> Unit = {},
+) {
     HabitBudgetTheme {
         Surface(
             modifier = Modifier
@@ -38,10 +43,10 @@ fun CategoriesScreen() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                   Button(onClick = { /*TODO*/ }) {
-                       Text(text = "Income")
-                   }
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(onClick = { onChangeCategoryType(CategoryType.INCOME) }) {
+                        Text(text = "Income")
+                    }
+                    Button(onClick = { onChangeCategoryType(CategoryType.EXPENSE) }) {
                         Text(text = "Expense")
                     }
                 }
