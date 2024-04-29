@@ -30,7 +30,7 @@ fun CategoriesScreen() {
 
             Column {
                 Text(
-                    text = "Wallets",
+                    text = "Categories",
                     fontWeight = FontWeight.Bold,
                     fontSize = 48.sp,
                     modifier = Modifier.fillMaxWidth()
