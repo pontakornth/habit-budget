@@ -33,6 +33,7 @@ import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
 import dev.pontakorn.habitbudget.ui.wallets.WalletScreen
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -60,30 +61,35 @@ fun MainScreenWithNavbar() {
             }
         },
         bottomBar = {
-        NavigationBar {
-            HabitBudgetNavigationInfo().getAllNavItems().forEachIndexed { index, navInfo ->
-                NavigationBarItem(
-                    selected = index == navSelectedItem,
-                    onClick = {
-                        navSelectedItem = index
-                        navController.navigate(navInfo.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+            NavigationBar {
+                HabitBudgetNavigationInfo().getAllNavItems().forEachIndexed { index, navInfo ->
+                    NavigationBarItem(
+                        selected = index == navSelectedItem,
+                        onClick = {
+                            navSelectedItem = index
+                            navController.navigate(navInfo.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = navInfo.icon,
+                                contentDescription = navInfo.label
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = navInfo.label, fontSize = 12.sp, textAlign = TextAlign.Center
+                            )
                         }
-                    },
-                    icon = { Icon(imageVector = navInfo.icon, contentDescription = navInfo.label) },
-                    label = {
-                        Text(
-                            text = navInfo.label, fontSize = 12.sp, textAlign = TextAlign.Center
-                        )
-                    }
-                )
+                    )
+                }
             }
-        }
-    }) { paddingValues ->
+        }) { paddingValues ->
 
         NavHost(
             navController = navController,
@@ -98,7 +104,7 @@ fun MainScreenWithNavbar() {
                     expense = 999.0,
                     remaining = 0.0,
 
-                )
+                    )
             }
             composable(route = DestinationScreens.HabitTracking.route) {
                 HabitTracking()
