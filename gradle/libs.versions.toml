@@ -2,6 +2,7 @@
 agp = "8.3.0"
 composecalendar = "1.2.0"
 desugar_jdk_libs = "2.0.3"
+hiltAndroidCompiler = "2.50"
 kotlin = "1.9.21"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -25,6 +26,8 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 composecalendar = { module = "io.github.boguszpawlowski.composecalendar:composecalendar", version.ref = "composecalendar" }
 composecalendar-kotlinx-datetime = { module = "io.github.boguszpawlowski.composecalendar:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidCompiler" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

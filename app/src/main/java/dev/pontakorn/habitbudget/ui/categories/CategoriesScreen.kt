@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -48,6 +52,16 @@ fun CategoriesScreen(
                     }
                     Button(onClick = { onChangeCategoryType(CategoryType.EXPENSE) }) {
                         Text(text = "Expense")
+                    }
+                }
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(categories) { category ->
+                        CategoryItemView(
+                            categoryIcon = Icons.Filled.ShoppingCart,
+                            categoryName = category.name
+                        )
                     }
                 }
             }

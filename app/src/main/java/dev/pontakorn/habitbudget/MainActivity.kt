@@ -3,6 +3,7 @@ package dev.pontakorn.habitbudget
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,31 +27,40 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
+import dev.pontakorn.habitbudget.ui.categories.ListCategoryScreen
+import dev.pontakorn.habitbudget.ui.categories.ListCategoryViewModel
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
-import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
 import dev.pontakorn.habitbudget.ui.wallets.WalletScreen
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val listCategoryViewModel: ListCategoryViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             HabitBudgetTheme {
-                MainScreenWithNavbar()
+                MainScreenWithNavbar(
+                    listCategoryViewModel = listCategoryViewModel
+                )
             }
         }
     }
 }
 
 @Composable
-fun MainScreenWithNavbar() {
+fun MainScreenWithNavbar(
+    listCategoryViewModel: ListCategoryViewModel? = null
+) {
     val navController = rememberNavController()
     var navSelectedItem by remember {
         mutableIntStateOf(0)
     }
     val currentRoute = navController.currentBackStackEntryAsState()
+
 
     Scaffold(
         floatingActionButton = {
@@ -99,12 +109,13 @@ fun MainScreenWithNavbar() {
         ) {
             // TODO: Replace dummy view with view + viewmodel (actual logic)
             composable(route = DestinationScreens.Transactions.route) {
-                TransactionScreen(
-                    income = 999.0,
-                    expense = 999.0,
-                    remaining = 0.0,
-
-                    )
+//                TransactionScreen(
+//                    income = 999.0,
+//                    expense = 999.0,
+//                    remaining = 0.0,
+//
+//                    )
+                ListCategoryScreen(listCategoryViewModel!!)
             }
             composable(route = DestinationScreens.HabitTracking.route) {
                 HabitTracking()
