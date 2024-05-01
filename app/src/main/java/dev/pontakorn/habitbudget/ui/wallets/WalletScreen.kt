@@ -12,10 +12,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
-fun WalletScreen() {
+fun WalletScreen(
+    wallets: List<Wallet> = emptyList()
+) {
     HabitBudgetTheme {
         Surface(
             modifier = Modifier

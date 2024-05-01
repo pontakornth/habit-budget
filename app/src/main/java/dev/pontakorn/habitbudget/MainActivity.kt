@@ -28,23 +28,26 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.pontakorn.habitbudget.ui.categories.ListCategoryScreen
 import dev.pontakorn.habitbudget.ui.categories.ListCategoryViewModel
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
+import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
+import dev.pontakorn.habitbudget.ui.wallets.ListWalletViewModel
 import dev.pontakorn.habitbudget.ui.wallets.WalletScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val listCategoryViewModel: ListCategoryViewModel by viewModels()
+//    private val listWalletViewModel: ListWalletViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             HabitBudgetTheme {
                 MainScreenWithNavbar(
-                    listCategoryViewModel = listCategoryViewModel
+                    listCategoryViewModel = listCategoryViewModel,
+//                    listWalletViewModel = listWalletViewModel
                 )
             }
         }
@@ -53,7 +56,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreenWithNavbar(
-    listCategoryViewModel: ListCategoryViewModel? = null
+    listCategoryViewModel: ListCategoryViewModel? = null,
+    listWalletViewModel: ListWalletViewModel? = null
 ) {
     val navController = rememberNavController()
     var navSelectedItem by remember {
@@ -109,20 +113,22 @@ fun MainScreenWithNavbar(
         ) {
             // TODO: Replace dummy view with view + viewmodel (actual logic)
             composable(route = DestinationScreens.Transactions.route) {
-//                TransactionScreen(
-//                    income = 999.0,
-//                    expense = 999.0,
-//                    remaining = 0.0,
-//
-//                    )
-                ListCategoryScreen(listCategoryViewModel!!)
+                TransactionScreen(
+                    income = 999.0,
+                    expense = 999.0,
+                    remaining = 0.0,
+
+                    )
+//                ListCategoryScreen(listCategoryViewModel!!)
             }
             composable(route = DestinationScreens.HabitTracking.route) {
                 HabitTracking()
             }
             composable(route = DestinationScreens.Wallets.route) {
                 WalletScreen()
+//                ListWalletScreen(listWalletViewModel!!)
             }
+
             composable(route = DestinationScreens.Settings.route) {
                 SettingsScreen()
             }

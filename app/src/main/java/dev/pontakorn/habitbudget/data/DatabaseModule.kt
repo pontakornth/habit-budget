@@ -31,5 +31,15 @@ class DatabaseModule {
         fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
             return OfflineCategoryRepository(categoryDao)
         }
+
+        @Provides
+        fun provideWalletDao(appDatabase: AppDatabase): WalletDao {
+            return appDatabase.walletDao()
+        }
+
+        @Provides
+        fun provideWalletRepository(walletDao: WalletDao): WalletRepository {
+            return OfflineWalletRepository(walletDao)
+        }
     }
 }
