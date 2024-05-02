@@ -4,6 +4,8 @@ sealed class DestinationScreens(val route: String) {
     data object Transactions: DestinationScreens("transactions")
     data object HabitTracking: DestinationScreens("habitTracking")
     data object Wallets: DestinationScreens("wallets")
+    data object AddWallet: DestinationScreens("wallets/add")
+    data object UpdateWallet: DestinationScreens("wallets/{walletId}/update")
     data object Settings: DestinationScreens("settings")
 
     data object Categories: DestinationScreens("categories")
