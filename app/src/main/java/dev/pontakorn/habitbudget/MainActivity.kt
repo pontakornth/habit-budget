@@ -3,7 +3,6 @@ package dev.pontakorn.habitbudget
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,7 +28,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.pontakorn.habitbudget.ui.categories.ListCategoryViewModel
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
@@ -42,16 +40,11 @@ import dev.pontakorn.habitbudget.ui.wallets.ListWalletViewModel
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val listCategoryViewModel: ListCategoryViewModel by viewModels()
-    private val listWalletViewModel: ListWalletViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             HabitBudgetTheme {
-                MainScreenWithNavbar(
-                    listCategoryViewModel = listCategoryViewModel,
-                    listWalletViewModel = listWalletViewModel
-                )
+                MainScreenWithNavbar()
             }
         }
     }
@@ -59,8 +52,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreenWithNavbar(
-    listCategoryViewModel: ListCategoryViewModel? = null,
-    listWalletViewModel: ListWalletViewModel? = null
 ) {
     val navController = rememberNavController()
     var navSelectedItem by remember {
@@ -139,7 +130,8 @@ fun MainScreenWithNavbar(
             }
             composable(route = DestinationScreens.Wallets.route) {
 //                WalletScreen()
-                ListWalletScreen(listWalletViewModel!!)
+                val listViewModel: ListWalletViewModel = hiltViewModel()
+                ListWalletScreen(listViewModel)
             }
             composable(route = DestinationScreens.AddWallet.route) {
 //                EditWalletScreen()
