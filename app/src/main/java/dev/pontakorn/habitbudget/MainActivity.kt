@@ -33,21 +33,22 @@ import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
+import dev.pontakorn.habitbudget.ui.wallets.EditWalletScreen
+import dev.pontakorn.habitbudget.ui.wallets.ListWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletViewModel
-import dev.pontakorn.habitbudget.ui.wallets.WalletScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val listCategoryViewModel: ListCategoryViewModel by viewModels()
-//    private val listWalletViewModel: ListWalletViewModel by viewModels()
+    private val listWalletViewModel: ListWalletViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             HabitBudgetTheme {
                 MainScreenWithNavbar(
                     listCategoryViewModel = listCategoryViewModel,
-//                    listWalletViewModel = listWalletViewModel
+                    listWalletViewModel = listWalletViewModel
                 )
             }
         }
@@ -68,9 +69,17 @@ fun MainScreenWithNavbar(
 
     Scaffold(
         floatingActionButton = {
-            if (currentRoute.value?.destination?.route == DestinationScreens.Transactions.route) {
-                FloatingActionButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Filled.Add, "Transaction")
+            when (currentRoute.value?.destination?.route) {
+                DestinationScreens.Transactions.route -> {
+                    FloatingActionButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.Add, "Add transaction")
+                    }
+                }
+                DestinationScreens.Wallets.route -> {
+                    FloatingActionButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.Add, "Add wallet")
+                    }
+
                 }
             }
         },
@@ -125,8 +134,11 @@ fun MainScreenWithNavbar(
                 HabitTracking()
             }
             composable(route = DestinationScreens.Wallets.route) {
-                WalletScreen()
-//                ListWalletScreen(listWalletViewModel!!)
+//                WalletScreen()
+                ListWalletScreen(listWalletViewModel!!)
+            }
+            composable(route = DestinationScreens.AddWallet.route) {
+                EditWalletScreen()
             }
 
             composable(route = DestinationScreens.Settings.route) {
