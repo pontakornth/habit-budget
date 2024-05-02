@@ -2,6 +2,7 @@ package dev.pontakorn.habitbudget.ui.wallets
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -26,13 +27,17 @@ import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 fun WalletItemView(
     walletIcon: ImageVector,
     walletName: String,
-    walletDisplayAmount: String
+    walletDisplayAmount: String,
+    onClickWalletItem: () -> Unit = {}
 ) {
     HabitBudgetTheme {
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .clickable {
+                    onClickWalletItem()
+                },
         ) {
             Row(
                 modifier = Modifier

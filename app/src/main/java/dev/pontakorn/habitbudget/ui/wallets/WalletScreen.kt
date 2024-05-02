@@ -23,7 +23,8 @@ import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
 fun WalletScreen(
-    wallets: List<Wallet> = emptyList()
+    wallets: List<Wallet> = emptyList(),
+    onClickWalletCard: (Int) -> Unit = {}
 ) {
     HabitBudgetTheme {
         Surface(
@@ -47,7 +48,8 @@ fun WalletScreen(
                         WalletItemView(
                             walletIcon = Icons.Filled.Warning,
                             walletName = it.name,
-                            walletDisplayAmount = "0.0"
+                            walletDisplayAmount = "0.0",
+                            onClickWalletItem = { onClickWalletCard(it.id) }
                         )
                     }
                 }

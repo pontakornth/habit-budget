@@ -23,10 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
@@ -36,6 +38,8 @@ import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreenViewModel
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletViewModel
+import dev.pontakorn.habitbudget.ui.wallets.UpdateWalletScreen
+import dev.pontakorn.habitbudget.ui.wallets.UpdateWalletScreenViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -68,6 +72,7 @@ fun MainScreenWithNavbar(
                         Icon(Icons.Filled.Add, "Add transaction")
                     }
                 }
+
                 DestinationScreens.Wallets.route -> {
                     FloatingActionButton(onClick = {
                         navController.navigate(DestinationScreens.AddWallet.route)
@@ -131,12 +136,23 @@ fun MainScreenWithNavbar(
             composable(route = DestinationScreens.Wallets.route) {
 //                WalletScreen()
                 val listViewModel: ListWalletViewModel = hiltViewModel()
-                ListWalletScreen(listViewModel)
+                ListWalletScreen(navController, listViewModel)
             }
             composable(route = DestinationScreens.AddWallet.route) {
 //                EditWalletScreen()
                 val viewModel: AddWalletScreenViewModel = hiltViewModel()
                 AddWalletScreen(navController = navController, addWalletScreenViewModel = viewModel)
+            }
+
+            composable(
+                route = DestinationScreens.UpdateWallet.route,
+                arguments = listOf(
+                    navArgument("walletId") { type = NavType.IntType }
+                )
+            ) {
+                val viewModel: UpdateWalletScreenViewModel = hiltViewModel()
+                UpdateWalletScreen(navController, viewModel)
+
             }
 
             composable(route = DestinationScreens.Settings.route) {

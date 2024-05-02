@@ -23,4 +23,8 @@ interface WalletDao {
     @Query("SELECT * from wallet")
 
     fun getAll(): Flow<List<Wallet>>
+
+    @Query("SELECT * from wallet WHERE id = :walletId")
+
+    fun getById(walletId: Int): Flow<Wallet>
 }
