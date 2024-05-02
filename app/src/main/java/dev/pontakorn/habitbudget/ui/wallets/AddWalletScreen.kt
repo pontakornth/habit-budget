@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.DestinationScreens
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.data.WalletRepository
+import dev.pontakorn.habitbudget.ui.icons.findIcon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,6 +45,8 @@ fun AddWalletScreen(
     EditWalletScreen(
         walletName = walletName,
         onChangeWalletName = { walletName = it },
+        // I hard code this thing. I know it exists.
+        currentIcon = findIcon("Wallet")!!,
         onClickIconButton = {
             navController.navigate(DestinationScreens.Icons.route)
         },

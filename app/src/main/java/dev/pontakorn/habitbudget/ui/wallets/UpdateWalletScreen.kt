@@ -11,6 +11,8 @@ import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.data.WalletRepository
+import dev.pontakorn.habitbudget.ui.icons.allIcons
+import dev.pontakorn.habitbudget.ui.icons.findIcon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +28,7 @@ class UpdateWalletScreenViewModel @Inject constructor(
     private var _uiState = MutableStateFlow<Wallet?>(null)
     private val walletId = checkNotNull(savedStateHandle.get<Int>("walletId"))
     val walletName = mutableStateOf("")
+    val walletIconName = mutableStateOf("Wallet")
     val uiState: StateFlow<Wallet?> = _uiState
 
     //
@@ -59,6 +62,7 @@ fun UpdateWalletScreen(
         title = "Edit Wallet",
         onBackButtonClick = { navController.popBackStack() },
         walletName = updateWalletScreenViewModel.walletName.value,
+        currentIcon = findIcon(updateWalletScreenViewModel.walletIconName.value) ?: allIcons[0],
         onChangeWalletName = {
             updateWalletScreenViewModel.onChangeWalletName(it)
         },
