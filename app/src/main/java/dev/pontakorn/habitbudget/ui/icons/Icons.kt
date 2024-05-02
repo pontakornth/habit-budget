@@ -22,3 +22,12 @@ val allIcons = listOf<IconInfo>(
     IconInfo("Home", R.drawable.baseline_home_24),
 
     )
+
+/**
+ * This find icon will retrive IconInfo from the list of hardcoded icons.
+ *
+ * It should be possible to have some sort of configuration but I messed up so hard.
+ */
+fun findIcon(iconName: String): IconInfo? {
+    return allIcons.find { it.iconName == iconName }
+}
