@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -19,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pontakorn.habitbudget.data.Wallet
+import dev.pontakorn.habitbudget.ui.icons.allIcons
+import dev.pontakorn.habitbudget.ui.icons.findIcon
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
@@ -46,7 +46,7 @@ fun WalletScreen(
                 ) {
                     items(wallets) {
                         WalletItemView(
-                            walletIcon = Icons.Filled.Warning,
+                            walletIcon = findIcon(it.iconName) ?: allIcons[0],
                             walletName = it.name,
                             walletDisplayAmount = "0.0",
                             onClickWalletItem = { onClickWalletCard(it.id) }

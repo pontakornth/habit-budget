@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.pontakorn.habitbudget.DestinationScreens
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.data.WalletRepository
 import kotlinx.coroutines.CoroutineScope
@@ -43,6 +44,9 @@ fun AddWalletScreen(
     EditWalletScreen(
         walletName = walletName,
         onChangeWalletName = { walletName = it },
+        onClickIconButton = {
+            navController.navigate(DestinationScreens.Icons.route)
+        },
         onBackButtonClick = { navController.popBackStack() },
         onConfirmButtonClick = {
             val scope = CoroutineScope(Dispatchers.Main)
