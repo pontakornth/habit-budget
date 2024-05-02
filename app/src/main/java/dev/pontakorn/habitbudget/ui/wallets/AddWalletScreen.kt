@@ -45,7 +45,7 @@ fun AddWalletScreen(
         onChangeWalletName = { walletName = it },
         onBackButtonClick = { navController.popBackStack() },
         onConfirmButtonClick = {
-            val scope = CoroutineScope(Dispatchers.IO)
+            val scope = CoroutineScope(Dispatchers.Main)
             scope.launch {
                 addWalletScreenViewModel.insertWallet(walletName)
                 navController.popBackStack()
