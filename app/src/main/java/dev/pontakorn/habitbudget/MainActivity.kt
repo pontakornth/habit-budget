@@ -31,6 +31,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
+import dev.pontakorn.habitbudget.ui.icons.IconSelectionScreen
+import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
@@ -76,6 +78,7 @@ fun MainScreenWithNavbar(
                 DestinationScreens.Wallets.route -> {
                     FloatingActionButton(onClick = {
                         navController.navigate(DestinationScreens.AddWallet.route)
+
                     }) {
                         Icon(Icons.Filled.Add, "Add wallet")
                     }
@@ -153,6 +156,10 @@ fun MainScreenWithNavbar(
                 val viewModel: UpdateWalletScreenViewModel = hiltViewModel()
                 UpdateWalletScreen(navController, viewModel)
 
+            }
+
+            composable(route = DestinationScreens.Icons.route) {
+                IconSelectionScreen(navController, usableIcons = allIcons)
             }
 
             composable(route = DestinationScreens.Settings.route) {

@@ -1,9 +1,10 @@
 package dev.pontakorn.habitbudget.ui.wallets
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,12 +24,12 @@ import javax.inject.Inject
 class AddWalletScreenViewModel @Inject constructor(private val walletRepository: WalletRepository) :
     ViewModel() {
 
-    suspend fun insertWallet(walletName: String) {
+    suspend fun insertWallet(walletName: String, iconName: String) {
         walletRepository.insertWallet(
             Wallet(
                 id = 0,
                 name = walletName,
-                iconName = "Wallet"
+                iconName = iconName
             )
         )
     }
@@ -40,21 +41,28 @@ fun AddWalletScreen(
     navController: NavController,
     addWalletScreenViewModel: AddWalletScreenViewModel = viewModel()
 ) {
-    var walletName by remember { mutableStateOf("") }
+    var walletName by rememberSaveable { mutableStateOf("") }
+
+    val selectedIconName = navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name") ?: "Wallet"
+    Log.i("AddWalletScreen", "selectedIconName = $selectedIconName")
 
     EditWalletScreen(
         walletName = walletName,
         onChangeWalletName = { walletName = it },
         // I hard code this thing. I know it exists.
-        currentIcon = findIcon("Wallet")!!,
+        currentIcon = findIcon(selectedIconName)!!,
         onClickIconButton = {
-            navController.navigate(DestinationScreens.Icons.route)
+            navController.navigate(DestinationScreens.Icons.route) {
+
+//                launchSingleTop = true
+                restoreState = true
+            }
         },
         onBackButtonClick = { navController.popBackStack() },
         onConfirmButtonClick = {
             val scope = CoroutineScope(Dispatchers.Main)
             scope.launch {
-                addWalletScreenViewModel.insertWallet(walletName)
+                addWalletScreenViewModel.insertWallet(walletName, selectedIconName)
                 navController.popBackStack()
             }
         }

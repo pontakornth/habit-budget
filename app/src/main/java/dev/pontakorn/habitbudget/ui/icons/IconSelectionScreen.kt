@@ -1,5 +1,6 @@
 package dev.pontakorn.habitbudget.ui.icons
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,13 +24,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 
 @Composable
 fun IconSelectionScreen(
+    navController: NavController = rememberNavController(),
     title: String = "Choose Category Icon",
-    categoryIcons: List<IconInfo>,
+    usableIcons: List<IconInfo>,
     onSelectCategoryIcon: (IconInfo) -> Unit = {},
     onBackButtonClick: () -> Unit = {}
 ) {
@@ -57,8 +61,13 @@ fun IconSelectionScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
 
                 ) {
-                    items(categoryIcons) { icon ->
-                        OutlinedIconButton(onClick = { onSelectCategoryIcon(icon) }) {
+                    items(usableIcons) { icon ->
+                        OutlinedIconButton(onClick = {
+                            onSelectCategoryIcon(icon)
+                            navController.previousBackStackEntry?.savedStateHandle?.set("icon_name", icon.iconName)
+                            navController.popBackStack()
+                            Log.i("IconSelectionScreen", "Icon selected: ${icon.iconName}")
+                        }) {
                             Icon(
                                 painter = painterResource(icon.resourceId),
                                 contentDescription = icon.iconName
@@ -86,5 +95,5 @@ fun IconSelectionScreen(
 @Preview(showBackground = true)
 @Composable
 fun IconSelectionScreenPreview() {
-    IconSelectionScreen(categoryIcons = allIcons)
+    IconSelectionScreen(usableIcons = allIcons)
 }
