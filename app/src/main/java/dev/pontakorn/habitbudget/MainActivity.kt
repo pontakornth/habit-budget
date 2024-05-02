@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +34,8 @@ import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
-import dev.pontakorn.habitbudget.ui.wallets.EditWalletScreen
+import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreen
+import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreenViewModel
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletViewModel
 
@@ -76,7 +78,9 @@ fun MainScreenWithNavbar(
                     }
                 }
                 DestinationScreens.Wallets.route -> {
-                    FloatingActionButton(onClick = { /*TODO*/ }) {
+                    FloatingActionButton(onClick = {
+                        navController.navigate(DestinationScreens.AddWallet.route)
+                    }) {
                         Icon(Icons.Filled.Add, "Add wallet")
                     }
 
@@ -138,7 +142,9 @@ fun MainScreenWithNavbar(
                 ListWalletScreen(listWalletViewModel!!)
             }
             composable(route = DestinationScreens.AddWallet.route) {
-                EditWalletScreen()
+//                EditWalletScreen()
+                val viewModel: AddWalletScreenViewModel = hiltViewModel()
+                AddWalletScreen(navController = navController, addWalletScreenViewModel = viewModel)
             }
 
             composable(route = DestinationScreens.Settings.route) {
