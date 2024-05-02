@@ -1,8 +1,14 @@
 package dev.pontakorn.habitbudget.ui.wallets
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,13 +32,26 @@ fun WalletScreen(
                 .padding(vertical = 16.dp, horizontal = 32.dp),
             color = MaterialTheme.colorScheme.background
         ) {
-
-            Text(
-                text = "Wallets",
-                fontWeight = FontWeight.Bold,
-                fontSize = 48.sp,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column {
+                Text(
+                    text = "Wallets",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 48.sp,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(wallets) {
+                        WalletItemView(
+                            walletIcon = Icons.Filled.Warning,
+                            walletName = it.name,
+                            walletDisplayAmount = "0.0"
+                        )
+                    }
+                }
+            }
         }
     }
 }
