@@ -64,16 +64,18 @@ fun UpdateWalletScreen(
     updateWalletScreenViewModel: UpdateWalletScreenViewModel = viewModel()
 ) {
     val uiState = updateWalletScreenViewModel.uiState.collectAsState()
-    val selectedIconName = navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name") ?: "Wallet"
+    val selectedIconName =
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name")
+            ?: uiState.value?.iconName ?: "Wallet"
     EditWalletScreen(
         title = "Edit Wallet",
         onBackButtonClick = { navController.popBackStack() },
         walletName = updateWalletScreenViewModel.walletName.value,
         currentIcon = findIcon(selectedIconName)!!,
         onClickIconButton = {
-                            navController.navigate(DestinationScreens.Icons.route) {
-                                restoreState = true
-                            }
+            navController.navigate(DestinationScreens.Icons.route) {
+                restoreState = true
+            }
         },
         onChangeWalletName = {
             updateWalletScreenViewModel.onChangeWalletName(it)
