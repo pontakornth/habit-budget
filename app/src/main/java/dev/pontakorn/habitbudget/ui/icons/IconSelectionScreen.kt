@@ -31,7 +31,7 @@ import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
 fun IconSelectionScreen(
-    navController: NavController = rememberNavController(),
+    navController: NavController,
     title: String = "Choose Category Icon",
     usableIcons: List<IconInfo>,
     onSelectCategoryIcon: (IconInfo) -> Unit = {},
@@ -64,7 +64,10 @@ fun IconSelectionScreen(
                     items(usableIcons) { icon ->
                         OutlinedIconButton(onClick = {
                             onSelectCategoryIcon(icon)
-                            navController.previousBackStackEntry?.savedStateHandle?.set("icon_name", icon.iconName)
+                            navController.previousBackStackEntry?.savedStateHandle?.set(
+                                "icon_name",
+                                icon.iconName
+                            )
                             navController.popBackStack()
                             Log.i("IconSelectionScreen", "Icon selected: ${icon.iconName}")
                         }) {
@@ -95,5 +98,5 @@ fun IconSelectionScreen(
 @Preview(showBackground = true)
 @Composable
 fun IconSelectionScreenPreview() {
-    IconSelectionScreen(usableIcons = allIcons)
+    IconSelectionScreen(navController = rememberNavController(), usableIcons = allIcons)
 }
