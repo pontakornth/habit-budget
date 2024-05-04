@@ -1,12 +1,8 @@
 package dev.pontakorn.habitbudget.ui.wallets
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,10 +17,12 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AddWalletScreenViewModel @Inject constructor(private val walletRepository: WalletRepository) :
-    ViewModel() {
+class AddWalletScreenViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val walletRepository: WalletRepository
+) : EditWalletViewModel() {
 
-    suspend fun insertWallet(walletName: String, iconName: String) {
+    suspend fun insertWallet() {
         walletRepository.insertWallet(
             Wallet(
                 id = 0,
@@ -41,16 +39,24 @@ fun AddWalletScreen(
     navController: NavController,
     addWalletScreenViewModel: AddWalletScreenViewModel = viewModel()
 ) {
-    var walletName by rememberSaveable { mutableStateOf("") }
 
-    val selectedIconName = navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name") ?: "Wallet"
-    Log.i("AddWalletScreen", "selectedIconName = $selectedIconName")
+    val selectedIconName =
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name")
+
+    LaunchedEffect(key1 = selectedIconName) {
+        selectedIconName?.let {
+            addWalletScreenViewModel.iconName = it
+        }
+    }
+
+
+
 
     EditWalletScreenContent(
-        walletName = walletName,
-        onChangeWalletName = { walletName = it },
+        walletName = addWalletScreenViewModel.walletName,
+        onChangeWalletName = { addWalletScreenViewModel.walletName = it },
         // I hard code this thing. I know it exists.
-        currentIcon = findIcon(selectedIconName)!!,
+        currentIcon = findIcon(addWalletScreenViewModel.iconName)!!,
         onClickIconButton = {
             navController.navigate(DestinationScreens.Icons.route) {
 
@@ -62,7 +68,7 @@ fun AddWalletScreen(
         onConfirmButtonClick = {
             val scope = CoroutineScope(Dispatchers.Main)
             scope.launch {
-                addWalletScreenViewModel.insertWallet(walletName, selectedIconName)
+                addWalletScreenViewModel.insertWallet()
                 navController.popBackStack()
             }
         }
