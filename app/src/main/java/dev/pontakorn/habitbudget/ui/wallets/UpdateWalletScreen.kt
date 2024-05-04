@@ -1,10 +1,9 @@
 package dev.pontakorn.habitbudget.ui.wallets
 
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -15,8 +14,6 @@ import dev.pontakorn.habitbudget.data.WalletRepository
 import dev.pontakorn.habitbudget.ui.icons.findIcon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,38 +21,42 @@ import javax.inject.Inject
 class UpdateWalletScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val walletRepository: WalletRepository
-) : ViewModel() {
-    private var _uiState = MutableStateFlow<Wallet?>(null)
+) : EditWalletViewModel() {
     private val walletId = checkNotNull(savedStateHandle.get<Int>("walletId"))
-    val walletName = mutableStateOf("")
-    val walletIconName = mutableStateOf("Wallet")
-    val uiState: StateFlow<Wallet?> = _uiState
+    private lateinit var wallet: Wallet
+
 
     //
     init {
         viewModelScope.launch {
             walletRepository.getWalletById(walletId).collect {
-                _uiState.value = it
-                walletName.value = it.name
-                walletIconName.value = it.iconName
+                wallet = it
+                walletName = it.name
+                iconName = it.iconName
+            }
+            // Assume it is a valid icon.
+            Log.i("UpdateWalletScreenViewModel", "Getting icon")
+            val iconNameFromSelectionScreen = savedStateHandle.get<String>("icon_name")
+            if (iconNameFromSelectionScreen != null) {
+                Log.i("UpdateWalletScreenViewModel", "icon_name: $iconNameFromSelectionScreen")
+                iconName = iconNameFromSelectionScreen
+            } else {
+                Log.i("UpdateWalletScreenViewModel", "icon_name: null")
             }
         }
     }
 
     //
 //
-    suspend fun updateWallet(selectedIconName: String) {
+    suspend fun updateWallet() {
         walletRepository.updateWallet(
-            _uiState.value!!.copy(
-                name = walletName.value,
-                iconName = selectedIconName
+            wallet.copy(
+                name = walletName,
+                iconName = iconName
             )
         )
     }
 
-    fun onChangeWalletName(newName: String) {
-        walletName.value = newName
-    }
 }
 
 @Composable
@@ -63,26 +64,28 @@ fun UpdateWalletScreen(
     navController: NavController,
     updateWalletScreenViewModel: UpdateWalletScreenViewModel = viewModel()
 ) {
-    val uiState = updateWalletScreenViewModel.uiState.collectAsState()
-    val selectedIconName =
-        navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name")
-            ?: uiState.value?.iconName ?: "Wallet"
-    EditWalletScreen(
+    val iconNameFromNavController = navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name")
+    LaunchedEffect(key1 = iconNameFromNavController) {
+        iconNameFromNavController?.let {
+            updateWalletScreenViewModel.iconName = it
+        }
+    }
+    EditWalletScreenContent(
         title = "Edit Wallet",
         onBackButtonClick = { navController.popBackStack() },
-        walletName = updateWalletScreenViewModel.walletName.value,
-        currentIcon = findIcon(selectedIconName)!!,
+        walletName = updateWalletScreenViewModel.walletName,
+        currentIcon = findIcon(updateWalletScreenViewModel.iconName)!!,
         onClickIconButton = {
             navController.navigate(DestinationScreens.Icons.route) {
                 restoreState = true
             }
         },
         onChangeWalletName = {
-            updateWalletScreenViewModel.onChangeWalletName(it)
+            updateWalletScreenViewModel.walletName = it
         },
         onConfirmButtonClick = {
             CoroutineScope(Dispatchers.Main).launch {
-                updateWalletScreenViewModel.updateWallet(selectedIconName)
+                updateWalletScreenViewModel.updateWallet()
                 navController.popBackStack()
             }
 

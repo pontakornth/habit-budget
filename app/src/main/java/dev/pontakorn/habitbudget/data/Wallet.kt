@@ -12,6 +12,6 @@ data class Wallet(
     // I will use hardcoded icon for this.
     // It is not suitable for a real project outside of the classroom.
     // But, I think it is OK for this project.
-    @ColumnInfo(name = "icon_name") val iconName: String
+    @ColumnInfo(name = "icon_name") var iconName: String
 
 )

@@ -12,7 +12,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,12 +22,50 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import dev.pontakorn.habitbudget.data.TransactionType
+import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
+import java.util.Date
 
 // TODO: Make it re-usable
 // Edit transaction should do the similar thing.
+
+abstract class EditTransactionViewModel : ViewModel() {
+
+}
+
 @Composable
-fun AddTransactionScreen() {
+fun EditTransactionScreen(
+    navController: NavController,
+    viewModel: EditTransactionViewModel,
+    title: String
+) {
+    // TODO: Use viewModel
+    EditTransactionScreenContent(
+        title = title,
+        onBack = { navController.popBackStack() }
+    )
+}
+
+@Composable
+fun EditTransactionScreenContent(
+    title: String = "Add Transaction",
+    transactionType: TransactionType = TransactionType.INCOME,
+    sourceWallet: Wallet? = null,
+    onChangeSourceWallet: (Wallet) -> Unit = {},
+    destinationWallet: Wallet? = null,
+    onChangeDestinationWallet: (Wallet) -> Unit = {},
+    // Note: amount is in baht but saved in satang.
+    amount: Double = 0.0,
+    onChangeAmount: (Double) -> Unit = {},
+    // Should be the current date
+    transactionDate: Date? = null,
+    onChangeTransactionDate: (Date) -> Unit = {},
+    onBack: () -> Unit = {},
+    onConfirm: () -> Unit = {},
+) {
     HabitBudgetTheme {
         Surface(
             modifier = Modifier
@@ -129,14 +166,16 @@ fun AddTransactionScreen() {
                         }
                     }
                     Row(
-                        modifier = Modifier.fillMaxSize().padding(bottom = 32.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 32.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom
                     ) {
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = onBack) {
                             Text(text = "Back")
                         }
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = onConfirm) {
                             Text(text = "Confirm")
                         }
                     }
@@ -149,6 +188,6 @@ fun AddTransactionScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun AddTransactionScreenPreview() {
-    AddTransactionScreen()
+fun EditTransactionScreenPreview() {
+    EditTransactionScreenContent()
 }

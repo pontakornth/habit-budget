@@ -25,13 +25,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import dev.pontakorn.habitbudget.data.CategoryType
 import dev.pontakorn.habitbudget.ui.icons.IconInfo
 import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
-fun EditWalletScreen(
+fun EditWalletScreen(viewModel: ViewModel) {
+}
+
+@Composable
+fun EditWalletScreenContent(
     title: String = "Add Wallet",
     walletName: String = "",
     onChangeWalletName: (String) -> Unit = {},
@@ -126,5 +131,5 @@ fun EditWalletScreen(
 @Preview(showBackground = true)
 @Composable
 fun EditCategoryScreenPreview() {
-    EditWalletScreen()
+    EditWalletScreenContent()
 }

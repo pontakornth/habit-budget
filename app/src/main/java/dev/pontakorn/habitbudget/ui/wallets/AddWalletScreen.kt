@@ -46,7 +46,7 @@ fun AddWalletScreen(
     val selectedIconName = navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name") ?: "Wallet"
     Log.i("AddWalletScreen", "selectedIconName = $selectedIconName")
 
-    EditWalletScreen(
+    EditWalletScreenContent(
         walletName = walletName,
         onChangeWalletName = { walletName = it },
         // I hard code this thing. I know it exists.
