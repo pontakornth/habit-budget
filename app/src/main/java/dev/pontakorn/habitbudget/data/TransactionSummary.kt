@@ -6,5 +6,4 @@ package dev.pontakorn.habitbudget.data
 data class TransactionSummary(
     val income: Int,
     val expense: Int,
-    val balance: Int
 )
