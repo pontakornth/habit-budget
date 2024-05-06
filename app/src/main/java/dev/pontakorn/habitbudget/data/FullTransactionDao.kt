@@ -1,5 +1,6 @@
 package dev.pontakorn.habitbudget.data
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import java.util.Date
 import androidx.room.Transaction as DatabaseTransaction
 
+@Dao
 interface FullTransactionDao {
     @DatabaseTransaction
     @Query(
@@ -49,9 +51,9 @@ interface FullTransactionDao {
 
     @DatabaseTransaction
     @Query(
-        "SELECT SUM(IIF(transaction_type = :firstType, amount, 0)) as income, " +
-                " SUM(IIF(transaction_type = :secondType, amount, 0)) as expense, " +
-                "income - expense as balance from `transaction`"
+        "SELECT SUM(IIF(transaction_type = :firstType, amount, 0))  income, " +
+                " SUM(IIF(transaction_type = :secondType, amount, 0))  expense " +
+                "from `transaction`"
     )
     fun getSummary(
         firstType: TransactionType,
@@ -64,9 +66,9 @@ interface FullTransactionDao {
 
     @DatabaseTransaction
     @Query(
-        "SELECT SUM(IIF(transaction_type = :firstType, amount, 0)) as income, " +
-                " SUM(IIF(transaction_type = :secondType, amount, 0)) as expense, " +
-                "income - expense as balance from `transaction`" +
+        "SELECT SUM(IIF(transaction_type = :firstType, amount, 0))  income, " +
+                " SUM(IIF(transaction_type = :secondType, amount, 0))  expense " +
+                "from `transaction` t " +
                 "WHERE t.transaction_time >= :timeBegin AND t.transaction_time < :timeEnd"
     )
     fun getSummaryDuring(
