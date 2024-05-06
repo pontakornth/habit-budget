@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.ui.icons.IconInfo
 import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
@@ -29,6 +30,7 @@ import java.util.Date
 fun TransactionItemView(
     transactionTitle: String,
     transactionAmount: Double,
+    transactionType: TransactionType = TransactionType.EXPENSE,
     transactionIcon: IconInfo,
     transactionSourceWalletIcon: IconInfo,
     transactionDestinationWalletIcon: IconInfo? = null,

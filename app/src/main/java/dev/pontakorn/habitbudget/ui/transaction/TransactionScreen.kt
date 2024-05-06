@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -128,9 +126,9 @@ fun TransactionScreen(
                         TransactionItemView(
                             transactionTitle = transaction.transactionTitle,
                             transactionAmount = transaction.transactionAmount,
-                            // TODO: Use actual icon
-                            transactionIcon = Icons.Outlined.Star,
-                            transactionDate = transaction.transactionDate
+                            transactionIcon = transaction.transactionIcon,
+                            transactionDate = transaction.transactionDate,
+                            transactionSourceWalletIcon = transaction.transactionSourceWalletIcon
                         )
                     }
                 }
@@ -164,26 +162,15 @@ fun TransactionScreenPreviewWithTransaction() {
                 transactionDate = Date(),
                 transactionIcon = allIcons[0],
                 transactionSourceWalletIcon = allIcons[0]
+            ),
+            TransactionDisplayItem(
+                transactionTitle = "Water",
+                transactionAmount = 99.0,
+                transactionDate = Date(),
+                transactionIcon = allIcons[0],
+                transactionSourceWalletIcon = allIcons[0]
+            ),
 
-            )
-//            Transaction(
-//                id = 99,
-//                categoryId = null,
-//                transactionType = TransactionType.EXPENSE,
-//                sourceWalletId = 99,
-//                amount = 999,
-//                destinationWalletId = null,
-//                transactionTime = Date(999999999)
-//            ),
-//            Transaction(
-//                id = 99,
-//                categoryId = null,
-//                transactionType = TransactionType.EXPENSE,
-//                sourceWalletId = 99,
-//                amount = 999,
-//                destinationWalletId = null,
-//                transactionTime = Date(999999999)
-//            ),
         )
     )
 }
