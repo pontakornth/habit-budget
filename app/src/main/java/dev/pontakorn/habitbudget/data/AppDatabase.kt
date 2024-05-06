@@ -11,9 +11,10 @@ import androidx.room.migration.AutoMigrationSpec
 
 @Database(
     entities = [Category::class, Transaction::class, Wallet::class],
-    version = 2,
+    version = 3,
     autoMigrations = [
-        AutoMigration(from = 1, to = 2, spec = AppDatabase.RenameIconName::class)
+        AutoMigration(from = 1, to = 2, spec = AppDatabase.RenameIconName::class),
+        AutoMigration(from = 2, to = 3)
     ]
 )
 @TypeConverters(TimestampConverter::class)
