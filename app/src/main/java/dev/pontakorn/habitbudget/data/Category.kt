@@ -13,6 +13,6 @@ enum class CategoryType {
 data class Category(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val name: String,
-    @ColumnInfo(name = "category_type") val categoryType: CategoryType
-    // TODO: Add icon
+    @ColumnInfo(name = "category_type") val categoryType: CategoryType,
+    @ColumnInfo(name = "icon_name", defaultValue = "Shopping") val iconName: String = "Shopping"
 )
