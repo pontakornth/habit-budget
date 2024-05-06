@@ -12,6 +12,7 @@ import dev.pontakorn.habitbudget.DestinationScreens
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.data.WalletRepository
 import dev.pontakorn.habitbudget.ui.icons.findIcon
+import dev.pontakorn.habitbudget.ui.icons.walletDefaultIcon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,7 +75,7 @@ fun UpdateWalletScreen(
         title = "Edit Wallet",
         onBackButtonClick = { navController.popBackStack() },
         walletName = updateWalletScreenViewModel.walletName,
-        currentIcon = findIcon(updateWalletScreenViewModel.iconName)!!,
+        currentIcon = findIcon(updateWalletScreenViewModel.iconName) ?: walletDefaultIcon,
         onClickIconButton = {
             navController.navigate(DestinationScreens.Icons.route) {
                 restoreState = true

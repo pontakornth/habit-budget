@@ -23,6 +23,9 @@ val allIcons = listOf<IconInfo>(
 
     )
 
+val walletDefaultIcon = IconInfo("Wallet", R.drawable.baseline_wallet_24)
+val categoryDefaultIcon = IconInfo("Shopping", R.drawable.baseline_shopping_cart_24)
+
 /**
  * This find icon will retrive IconInfo from the list of hardcoded icons.
  *

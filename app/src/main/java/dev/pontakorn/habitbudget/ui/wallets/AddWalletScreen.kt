@@ -10,6 +10,7 @@ import dev.pontakorn.habitbudget.DestinationScreens
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.data.WalletRepository
 import dev.pontakorn.habitbudget.ui.icons.findIcon
+import dev.pontakorn.habitbudget.ui.icons.walletDefaultIcon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,8 +56,7 @@ fun AddWalletScreen(
     EditWalletScreenContent(
         walletName = addWalletScreenViewModel.walletName,
         onChangeWalletName = { addWalletScreenViewModel.walletName = it },
-        // I hard code this thing. I know it exists.
-        currentIcon = findIcon(addWalletScreenViewModel.iconName)!!,
+        currentIcon = findIcon(addWalletScreenViewModel.iconName) ?: walletDefaultIcon,
         onClickIconButton = {
             navController.navigate(DestinationScreens.Icons.route) {
 
