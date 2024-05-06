@@ -1,13 +1,13 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
-import androidx.compose.ui.graphics.vector.ImageVector
+import dev.pontakorn.habitbudget.ui.icons.IconInfo
 import java.util.Date
 
 data class TransactionDisplayItem(
     val transactionTitle: String,
     val transactionAmount: Double,
-    val transactionIcon: ImageVector,
-    val transactionSourceWalletIcon: ImageVector,
-    val transactionDestinationWalletIcon: ImageVector?,
+    val transactionIcon: IconInfo,
+    val transactionSourceWalletIcon: IconInfo,
+    val transactionDestinationWalletIcon: IconInfo? = null,
     val transactionDate: Date
 )

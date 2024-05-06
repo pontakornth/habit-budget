@@ -27,8 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pontakorn.habitbudget.data.Transaction
-import dev.pontakorn.habitbudget.data.TransactionType
+import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import java.util.Date
 
@@ -37,7 +36,10 @@ fun TransactionScreen(
     income: Double,
     expense: Double,
     remaining: Double,
-    transactions: List<Transaction> = listOf()
+    transactions: List<TransactionDisplayItem> = listOf(),
+    onClickTransaction: (TransactionDisplayItem) -> Unit = {},
+    onClickMonthSelector: () -> Unit = {},
+    onChangeMonth: (String) -> Unit = {},
 ) {
 
 
@@ -124,13 +126,11 @@ fun TransactionScreen(
                 ) {
                     for (transaction in transactions) {
                         TransactionItemView(
-                            // TODO: Use transaction title
-                            transactionTitle = "Placeholder",
-                            // TODO: Convert satang to baht
-                            transactionAmount = transaction.amount.toDouble(),
+                            transactionTitle = transaction.transactionTitle,
+                            transactionAmount = transaction.transactionAmount,
                             // TODO: Use actual icon
                             transactionIcon = Icons.Outlined.Star,
-                            transactionDate = transaction.transactionTime
+                            transactionDate = transaction.transactionDate
                         )
                     }
                 }
@@ -158,24 +158,32 @@ fun TransactionScreenPreviewWithTransaction() {
         expense = 9999.0,
         remaining = 0.0,
         transactions = listOf(
-            Transaction(
-                id = 99,
-                categoryId = null,
-                transactionType = TransactionType.EXPENSE,
-                sourceWalletId = 99,
-                amount = 999,
-                destinationWalletId = null,
-                transactionTime = Date(999999999)
-            ),
-            Transaction(
-                id = 99,
-                categoryId = null,
-                transactionType = TransactionType.EXPENSE,
-                sourceWalletId = 99,
-                amount = 999,
-                destinationWalletId = null,
-                transactionTime = Date(999999999)
-            ),
+            TransactionDisplayItem(
+                transactionTitle = "Food",
+                transactionAmount = 99.0,
+                transactionDate = Date(),
+                transactionIcon = allIcons[0],
+                transactionSourceWalletIcon = allIcons[0]
+
+            )
+//            Transaction(
+//                id = 99,
+//                categoryId = null,
+//                transactionType = TransactionType.EXPENSE,
+//                sourceWalletId = 99,
+//                amount = 999,
+//                destinationWalletId = null,
+//                transactionTime = Date(999999999)
+//            ),
+//            Transaction(
+//                id = 99,
+//                categoryId = null,
+//                transactionType = TransactionType.EXPENSE,
+//                sourceWalletId = 99,
+//                amount = 999,
+//                destinationWalletId = null,
+//                transactionTime = Date(999999999)
+//            ),
         )
     )
 }

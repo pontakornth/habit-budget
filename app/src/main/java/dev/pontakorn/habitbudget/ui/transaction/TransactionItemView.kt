@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -16,9 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.pontakorn.habitbudget.ui.icons.IconInfo
+import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -29,7 +29,9 @@ import java.util.Date
 fun TransactionItemView(
     transactionTitle: String,
     transactionAmount: Double,
-    transactionIcon: ImageVector,
+    transactionIcon: IconInfo,
+    transactionSourceWalletIcon: IconInfo,
+    transactionDestinationWalletIcon: IconInfo? = null,
     transactionDate: Date
 ) {
     val formatter = DateTimeFormatter.ofPattern("dd/MMMM/yyyy")
@@ -50,8 +52,8 @@ fun TransactionItemView(
                     modifier = Modifier.border(BorderStroke(2.dp, Color.Black))
                 ) {
                     Icon(
-                        imageVector = transactionIcon,
-                        contentDescription = transactionTitle,
+                        painter = painterResource(id = transactionIcon.resourceId),
+                        contentDescription = transactionIcon.iconName,
                         modifier = Modifier.padding(8.dp)
                     )
                 }
@@ -76,7 +78,8 @@ fun TransactionItemPreview() {
     TransactionItemView(
         transactionTitle = "Example transaction",
         transactionAmount = 99.99,
-        transactionIcon = Icons.Outlined.Star,
+        transactionIcon = allIcons[0],
+        transactionSourceWalletIcon = allIcons[0],
         transactionDate = Date()
     )
 }
