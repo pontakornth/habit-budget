@@ -26,6 +26,15 @@ class OfflineFullTransactionRepository(private val fullTransactionDao: FullTrans
         return fullTransactionDao.getDuringByType(currentMonth, nextMonth, transactionType)
     }
 
+    override fun getSummary(): Flow<TransactionSummary> {
+        return fullTransactionDao.getSummary()
+    }
+
+    override fun getSummary(month: Int, year: Int): Flow<TransactionSummary> {
+        val (currentMonth, nextMonth) = DateUtil.getMonthDuration(month, year)
+        return fullTransactionDao.getSummaryDuring(currentMonth, nextMonth)
+    }
+
     override suspend fun insertTransaction(transaction: Transaction) {
         fullTransactionDao.insertTransaction(transaction)
     }

@@ -11,6 +11,8 @@ interface FullTransactionRepository {
         year: Int,
         transactionType: TransactionType
     ): Flow<List<FullTransaction>>
+    fun getSummary(): Flow<TransactionSummary>
+    fun getSummary(month: Int, year: Int): Flow<TransactionSummary>
 
     suspend fun insertTransaction(transaction: Transaction)
     suspend fun updateTransaction(transaction: Transaction)
