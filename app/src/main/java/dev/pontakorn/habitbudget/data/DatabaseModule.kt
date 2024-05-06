@@ -41,5 +41,25 @@ class DatabaseModule {
         fun provideWalletRepository(walletDao: WalletDao): WalletRepository {
             return OfflineWalletRepository(walletDao)
         }
+
+        @Provides
+        fun provideTransactionDao(appDatabase: AppDatabase): TransactionDao {
+            return appDatabase.transactionDao()
+        }
+
+        @Provides
+        fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository {
+            return OfflineTransactionRepository(transactionDao)
+        }
+
+        @Provides
+        fun provideFullTransactionDao(appDatabase: AppDatabase): FullTransactionDao {
+            return appDatabase.fullTransactionDao()
+        }
+
+        @Provides
+        fun provideFullTransactionRepository(fullTransactionDao: FullTransactionDao): FullTransactionRepository {
+            return OfflineFullTransactionRepository(fullTransactionDao)
+        }
     }
 }

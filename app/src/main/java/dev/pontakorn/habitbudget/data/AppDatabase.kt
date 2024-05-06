@@ -29,6 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao
     abstract fun transactionDao(): TransactionDao
+    abstract fun fullTransactionDao(): FullTransactionDao
     abstract fun walletDao(): WalletDao
 
     companion object {
