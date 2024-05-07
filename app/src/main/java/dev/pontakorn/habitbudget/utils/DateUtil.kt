@@ -1,6 +1,7 @@
 package dev.pontakorn.habitbudget.utils
 
 import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import java.util.Calendar
 import java.util.Date
 
@@ -26,6 +27,8 @@ object DateUtil {
     }
 
     fun getFormattedTime(hour: Int, minute: Int): String {
+        // Timezone is irrelevant here. It is for formatting only.
+        timeFormatter.timeZone = TimeZone.getTimeZone("UTC")
         return timeFormatter.format((hour * 3600 + minute * 60) * 1000)
     }
 }

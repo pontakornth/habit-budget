@@ -1,5 +1,6 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -90,8 +91,8 @@ fun EditTransactionScreenContent(
     onChangeAmount: (Double) -> Unit = {},
     transactionDate: Date? = Date(),
     onChangeTransactionDate: (Date) -> Unit = {},
-    transactionTime: Int = 0,
-    onChangeTransactionTime: (Int) -> Unit = {},
+    transactionTime: Pair<Int, Int> = 0 to 0,
+    onChangeTransactionTime: (Pair<Int, Int>) -> Unit = {},
     onBack: () -> Unit = {},
     onConfirm: () -> Unit = {},
 ) {
@@ -115,8 +116,9 @@ fun EditTransactionScreenContent(
 
     var timePickerState = rememberTimePickerState()
     LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
-        // Convert to milliseconds
-        onChangeTransactionTime((timePickerState.hour * 3600 + timePickerState.minute * 60) * 1000)
+
+        Log.d("EditTransactionScreenContent", "Hour: ${timePickerState.hour}, Minute: ${timePickerState.minute}")
+        onChangeTransactionTime(timePickerState.hour to timePickerState.minute)
     }
     var showTimePicker by remember { mutableStateOf(false) }
     val decimalFormatter = DecimalFormatter()
@@ -299,7 +301,7 @@ fun EditTransactionScreenContent(
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
                                 // TODO: Use function to actually forma
-                                Text(text = getFormattedTime(transactionTime), textAlign = TextAlign.End)
+                                Text(text = getFormattedTime(transactionTime.first, transactionTime.second), textAlign = TextAlign.End)
                             }
                             if (showTimePicker) {
                                 TimePickerDialog(
