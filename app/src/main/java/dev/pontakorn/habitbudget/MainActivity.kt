@@ -38,9 +38,7 @@ import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.ui.transaction.ListTransactionScreen
 import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreen
-import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreenViewModel
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletScreen
-import dev.pontakorn.habitbudget.ui.wallets.ListWalletViewModel
 import dev.pontakorn.habitbudget.ui.wallets.UpdateWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.UpdateWalletScreenViewModel
 
@@ -139,25 +137,15 @@ fun MainScreenWithNavbar(
             // TODO: Replace dummy view with view + viewmodel (actual logic)
             composable(route = DestinationScreens.Transactions.route) {
                 ListTransactionScreen(navController)
-//                TransactionScreen(
-//                    income = 999.0,
-//                    expense = 999.0,
-//                    remaining = 0.0,
-//
-//                    )
             }
             composable(route = DestinationScreens.HabitTracking.route) {
                 HabitTracking()
             }
             composable(route = DestinationScreens.Wallets.route) {
-//                WalletScreen()
-                val listViewModel: ListWalletViewModel = hiltViewModel()
-                ListWalletScreen(navController, listViewModel)
+                ListWalletScreen(navController)
             }
             composable(route = DestinationScreens.AddWallet.route) {
-//                EditWalletScreen()
-                val viewModel: AddWalletScreenViewModel = hiltViewModel()
-                AddWalletScreen(navController = navController, addWalletScreenViewModel = viewModel)
+                AddWalletScreen(navController = navController)
             }
 
             composable(

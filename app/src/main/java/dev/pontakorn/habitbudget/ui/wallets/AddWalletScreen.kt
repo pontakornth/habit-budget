@@ -2,8 +2,8 @@ package dev.pontakorn.habitbudget.ui.wallets
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.DestinationScreens
@@ -38,7 +38,7 @@ class AddWalletScreenViewModel @Inject constructor(
 @Composable
 fun AddWalletScreen(
     navController: NavController,
-    addWalletScreenViewModel: AddWalletScreenViewModel = viewModel()
+    addWalletScreenViewModel: AddWalletScreenViewModel = hiltViewModel()
 ) {
 
     val selectedIconName =
