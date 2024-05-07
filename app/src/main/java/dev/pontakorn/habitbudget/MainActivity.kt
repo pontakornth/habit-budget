@@ -35,7 +35,7 @@ import dev.pontakorn.habitbudget.ui.icons.IconSelectionScreen
 import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
-import dev.pontakorn.habitbudget.ui.transaction.TransactionScreen
+import dev.pontakorn.habitbudget.ui.transaction.ListTransactionScreen
 import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreenViewModel
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletScreen
@@ -125,13 +125,13 @@ fun MainScreenWithNavbar(
         ) {
             // TODO: Replace dummy view with view + viewmodel (actual logic)
             composable(route = DestinationScreens.Transactions.route) {
-                TransactionScreen(
-                    income = 999.0,
-                    expense = 999.0,
-                    remaining = 0.0,
-
-                    )
-//                ListCategoryScreen(listCategoryViewModel!!)
+                ListTransactionScreen(navController)
+//                TransactionScreen(
+//                    income = 999.0,
+//                    expense = 999.0,
+//                    remaining = 0.0,
+//
+//                    )
             }
             composable(route = DestinationScreens.HabitTracking.route) {
                 HabitTracking()

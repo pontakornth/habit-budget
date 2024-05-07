@@ -2,6 +2,8 @@ package dev.pontakorn.habitbudget
 
 sealed class DestinationScreens(val route: String) {
     data object Transactions: DestinationScreens("transactions")
+    data object AddTransaction: DestinationScreens("transactions/add")
+    data object UpdateTransaction: DestinationScreens("transactions/{transactionId}/update")
     data object HabitTracking: DestinationScreens("habitTracking")
     data object Wallets: DestinationScreens("wallets")
     data object AddWallet: DestinationScreens("wallets/add")
