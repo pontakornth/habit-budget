@@ -9,13 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +66,7 @@ fun EditTransactionScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditTransactionScreenContent(
     title: String = "Add Transaction",
@@ -89,6 +95,14 @@ fun EditTransactionScreenContent(
     var transactionTypeDropdownOpen by remember {
         mutableStateOf(false)
     }
+    // TODO: Add date range
+    var datePickerState = rememberDatePickerState(initialSelectedDateMillis = transactionDate?.time)
+    LaunchedEffect(key1 = datePickerState.selectedDateMillis) {
+        datePickerState.selectedDateMillis?.let {
+            onChangeTransactionDate(Date(it))
+        }
+    }
+    var showDatePicker by remember { mutableStateOf(false) }
     val decimalFormatter = DecimalFormatter()
     val transactionTypes = listOf(
         TransactionType.EXPENSE,
@@ -228,11 +242,32 @@ fun EditTransactionScreenContent(
                     ) {
 
                         Text(text = "Date", fontWeight = FontWeight.Medium, fontSize = 24.sp)
-                        OutlinedButton(
-                            onClick = { /*TODO*/ },
-                            shape = RoundedCornerShape(size = 4.dp)
-                        ) {
-                            Text(text = "Date", textAlign = TextAlign.End)
+                        Column {
+                            OutlinedButton(
+                                onClick = { showDatePicker = true },
+                                shape = RoundedCornerShape(size = 4.dp)
+                            ) {
+                                // TODO: Use function to actually format date
+                                Text(text = transactionDate.toString(), textAlign = TextAlign.End)
+                            }
+                            if (showDatePicker) {
+                                DatePickerDialog(
+                                    onDismissRequest = { showDatePicker = false },
+                                    confirmButton = {
+                                        Button(onClick = { showDatePicker = false }) {
+                                            Text(text = "Confirm")
+                                        }
+                                    },
+                                    dismissButton = {
+                                        Button(onClick = { showDatePicker = false }) {
+                                            Text(text = "Cancel")
+                                        }
+                                    }
+
+                                ) {
+                                    DatePicker(state = datePickerState)
+                                }
+                            }
                         }
                     }
                     Row(
