@@ -18,7 +18,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +41,9 @@ import androidx.navigation.NavController
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
+import dev.pontakorn.habitbudget.ui.utils.TimePickerDialog
+import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedDate
+import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedTime
 import dev.pontakorn.habitbudget.utils.DecimalFormatter
 import java.util.Date
 
@@ -62,7 +67,9 @@ fun EditTransactionScreen(
         amount = viewModel.amount,
         onChangeAmount = { viewModel.amount = it },
         transactionDate = viewModel.transactionDate,
-        onChangeTransactionDate = { viewModel.transactionDate = it }
+        onChangeTransactionDate = { viewModel.transactionDate = it },
+        transactionTime = viewModel.transactionTime,
+        onChangeTransactionTime = { viewModel.transactionTime = it}
     )
 }
 
@@ -83,6 +90,8 @@ fun EditTransactionScreenContent(
     onChangeAmount: (Double) -> Unit = {},
     transactionDate: Date? = Date(),
     onChangeTransactionDate: (Date) -> Unit = {},
+    transactionTime: Int = 0,
+    onChangeTransactionTime: (Int) -> Unit = {},
     onBack: () -> Unit = {},
     onConfirm: () -> Unit = {},
 ) {
@@ -103,6 +112,13 @@ fun EditTransactionScreenContent(
         }
     }
     var showDatePicker by remember { mutableStateOf(false) }
+
+    var timePickerState = rememberTimePickerState()
+    LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
+        // Convert to milliseconds
+        onChangeTransactionTime((timePickerState.hour * 3600 + timePickerState.minute * 60) * 1000)
+    }
+    var showTimePicker by remember { mutableStateOf(false) }
     val decimalFormatter = DecimalFormatter()
     val transactionTypes = listOf(
         TransactionType.EXPENSE,
@@ -247,8 +263,7 @@ fun EditTransactionScreenContent(
                                 onClick = { showDatePicker = true },
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                // TODO: Use function to actually format date
-                                Text(text = transactionDate.toString(), textAlign = TextAlign.End)
+                                Text(text = getFormattedDate(transactionDate ?: Date()), textAlign = TextAlign.End)
                             }
                             if (showDatePicker) {
                                 DatePickerDialog(
@@ -266,6 +281,43 @@ fun EditTransactionScreenContent(
 
                                 ) {
                                     DatePicker(state = datePickerState)
+                                }
+                            }
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Text(text = "Time", fontWeight = FontWeight.Medium, fontSize = 24.sp)
+                        Column {
+                            OutlinedButton(
+                                onClick = { showTimePicker = true },
+                                shape = RoundedCornerShape(size = 4.dp)
+                            ) {
+                                // TODO: Use function to actually forma
+                                Text(text = getFormattedTime(transactionTime), textAlign = TextAlign.End)
+                            }
+                            if (showTimePicker) {
+                                TimePickerDialog(
+                                    title = "Choose transaction time",
+                                    onDismissRequest = { showTimePicker = false },
+                                    confirmButton = {
+                                        Button(onClick = { showTimePicker = false }) {
+                                            Text(text = "Confirm")
+                                        }
+                                    },
+                                    dismissButton = {
+                                        Button(onClick = { showTimePicker = false }) {
+                                            Text(text = "Cancel")
+                                        }
+                                    }
+
+                                ) {
+                                    TimePicker(state = timePickerState)
                                 }
                             }
                         }

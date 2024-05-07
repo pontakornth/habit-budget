@@ -2,6 +2,7 @@ package dev.pontakorn.habitbudget.ui.transaction
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,7 @@ abstract class EditTransactionViewModel : ViewModel() {
     var destinationWallet by mutableStateOf<Wallet?>(null)
     var amount by mutableDoubleStateOf(0.0)
     var transactionDate by mutableStateOf(Date())
+    var transactionTime by mutableIntStateOf(0)
 
     fun allowAddTransaction(): Boolean {
         if (transactionType == TransactionType.TRANSFER) {
