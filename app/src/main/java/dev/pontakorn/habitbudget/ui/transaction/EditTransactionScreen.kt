@@ -157,12 +157,35 @@ fun EditTransactionScreenContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
 
-                        Text(text = "Wallet", fontWeight = FontWeight.Medium, fontSize = 24.sp)
+                        Text(
+                            text = if (transactionType == TransactionType.TRANSFER) {
+                                "From wallet"
+                            } else "Wallet", fontWeight = FontWeight.Medium, fontSize = 24.sp
+                        )
                         OutlinedButton(
                             onClick = { /*TODO*/ },
                             shape = RoundedCornerShape(size = 4.dp)
                         ) {
                             Text(text = "Bank Account", textAlign = TextAlign.End)
+                        }
+                    }
+                    if (transactionType == TransactionType.TRANSFER) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Text(
+                                text = "To wallet", fontWeight = FontWeight.Medium, fontSize = 24.sp
+                            )
+                            OutlinedButton(
+                                onClick = { /*TODO*/ },
+                                shape = RoundedCornerShape(size = 4.dp)
+                            ) {
+                                Text(text = "Bank Account", textAlign = TextAlign.End)
+                            }
                         }
                     }
                     Row(
@@ -235,4 +258,12 @@ fun EditTransactionScreenContent(
 @Composable
 fun EditTransactionScreenPreview() {
     EditTransactionScreenContent()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EditTransactionScreenTransferPreview() {
+    EditTransactionScreenContent(
+        transactionType = TransactionType.TRANSFER
+    )
 }
