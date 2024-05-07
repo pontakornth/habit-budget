@@ -44,7 +44,6 @@ fun EditTransactionScreen(
     viewModel: EditTransactionViewModel,
     title: String
 ) {
-    // TODO: Use viewModel
     EditTransactionScreenContent(
         title = title,
         onBack = { navController.popBackStack() },
@@ -212,8 +211,11 @@ fun EditTransactionScreenContent(
 
                         Text(text = "Amount", fontWeight = FontWeight.Medium, fontSize = 24.sp)
                         OutlinedTextField(
-                            value = "",
-                            onValueChange = { rawAmount = decimalFormatter.cleanup(it) },
+                            value = rawAmount,
+                            onValueChange = {
+                                rawAmount = decimalFormatter.cleanup(it)
+                                onChangeAmount(it.ifEmpty { "0" }.toBigDecimal().toDouble())
+                            },
                             shape = RoundedCornerShape(size = 4.dp),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                         )
