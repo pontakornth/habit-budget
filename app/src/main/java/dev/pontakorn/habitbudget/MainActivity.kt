@@ -30,6 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import dev.pontakorn.habitbudget.ui.categories.ListCategoryScreen
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.icons.IconSelectionScreen
 import dev.pontakorn.habitbudget.ui.icons.allIcons
@@ -70,7 +71,9 @@ fun MainScreenWithNavbar(
         floatingActionButton = {
             when (currentRoute.value?.destination?.route) {
                 DestinationScreens.Transactions.route -> {
-                    FloatingActionButton(onClick = { /*TODO*/ }) {
+                    FloatingActionButton(onClick = {
+                        navController.navigate(DestinationScreens.AddTransaction.route)
+                    }) {
                         Icon(Icons.Filled.Add, "Add transaction")
                     }
                 }
@@ -81,6 +84,16 @@ fun MainScreenWithNavbar(
 
                     }) {
                         Icon(Icons.Filled.Add, "Add wallet")
+                    }
+
+                }
+
+                DestinationScreens.Categories.route -> {
+                    FloatingActionButton(onClick = {
+                        navController.navigate(DestinationScreens.AddCategory.route)
+
+                    }) {
+                        Icon(Icons.Filled.Add, "Add category")
                     }
 
                 }
@@ -166,18 +179,21 @@ fun MainScreenWithNavbar(
                 SettingsScreen()
             }
 
+            composable(route = DestinationScreens.Categories.route) {
+                ListCategoryScreen(navController)
+            }
+
+            composable(route = DestinationScreens.AddCategory.route) {
+                // TODO: Add add category screen
+//                AddCategoryScreen(navController)
+            }
+
+
         }
     }
 
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 @Preview(showBackground = true)
 @Composable
