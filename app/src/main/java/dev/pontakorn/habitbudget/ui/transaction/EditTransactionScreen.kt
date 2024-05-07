@@ -49,6 +49,7 @@ fun EditTransactionScreen(
         title = title,
         onBack = { navController.popBackStack() },
         transactionType = viewModel.transactionType,
+        onChangeTransactionType = { viewModel.transactionType = it },
         sourceWallet = viewModel.sourceWallet,
         onClickSourceWallet = { /*TODO: Navigate to wallet screen*/ },
         destinationWallet = viewModel.destinationWallet,
@@ -133,7 +134,7 @@ fun EditTransactionScreenContent(
                                 onClick = { transactionTypeDropdownOpen = true },
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                Text(text = "Expense", textAlign = TextAlign.End)
+                                Text(text = transactionType.toString(), textAlign = TextAlign.End)
                             }
                             DropdownMenu(
                                 expanded = transactionTypeDropdownOpen,
