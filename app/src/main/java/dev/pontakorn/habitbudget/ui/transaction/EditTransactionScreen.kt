@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -63,6 +65,7 @@ fun EditTransactionScreen(
 fun EditTransactionScreenContent(
     title: String = "Add Transaction",
     transactionType: TransactionType = TransactionType.INCOME,
+    onChangeTransactionType: (TransactionType) -> Unit = {},
     sourceWallet: Wallet? = null,
     onClickSourceWallet: () -> Unit = {},
     onChangeSourceWallet: (Wallet) -> Unit = {},
@@ -83,7 +86,15 @@ fun EditTransactionScreenContent(
         // Note: This assumes the value is not abnormally high or low.
         mutableStateOf(amount.toString())
     }
+    var transactionTypeDropdownOpen by remember {
+        mutableStateOf(false)
+    }
     val decimalFormatter = DecimalFormatter()
+    val transactionTypes = listOf(
+        TransactionType.EXPENSE,
+        TransactionType.INCOME,
+        TransactionType.TRANSFER
+    )
     HabitBudgetTheme {
         Surface(
             modifier = Modifier
@@ -117,11 +128,25 @@ fun EditTransactionScreenContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "Type", fontWeight = FontWeight.Medium, fontSize = 24.sp)
-                        OutlinedButton(
-                            onClick = { /*TODO*/ },
-                            shape = RoundedCornerShape(size = 4.dp)
-                        ) {
-                            Text(text = "Expense", textAlign = TextAlign.End)
+                        Column {
+                            OutlinedButton(
+                                onClick = { transactionTypeDropdownOpen = true },
+                                shape = RoundedCornerShape(size = 4.dp)
+                            ) {
+                                Text(text = "Expense", textAlign = TextAlign.End)
+                            }
+                            DropdownMenu(
+                                expanded = transactionTypeDropdownOpen,
+                                onDismissRequest = { transactionTypeDropdownOpen = false }) {
+                                transactionTypes.forEach { transactionType ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = transactionType.toString()) },
+                                        onClick = {
+                                            onChangeTransactionType(transactionType)
+                                            transactionTypeDropdownOpen = false
+                                        })
+                                }
+                            }
                         }
                     }
                     Row(
