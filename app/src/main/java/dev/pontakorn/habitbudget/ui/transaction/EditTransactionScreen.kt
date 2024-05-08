@@ -61,10 +61,12 @@ fun EditTransactionScreen(
         if (modeFromNavController == 1) {
             walletIdFromNavController?.run {
                 // TODO: Get wallet by id
+                viewModel.getSourceWallet(walletIdFromNavController)
                 Log.i("EditTransactionScreen", "select wallet $this as source wallet")
             }
         } else if (modeFromNavController == 2) {
             walletIdFromNavController?.run {
+                viewModel.getDestinationWallet(walletIdFromNavController)
                 Log.i("EditTransactionScreen", "select wallet $this as destination wallet")
             }
         }
