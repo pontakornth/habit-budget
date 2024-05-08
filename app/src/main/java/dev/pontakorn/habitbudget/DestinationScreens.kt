@@ -10,7 +10,7 @@ sealed class DestinationScreens(val route: String) {
     data object UpdateWallet: DestinationScreens("wallets/{walletId}/update")
     data object Settings: DestinationScreens("settings")
 
-    data object Categories: DestinationScreens("categories")
+    data object Categories: DestinationScreens("categories?shouldSelect={shouldSelect}")
     data object AddCategory: DestinationScreens("categories/add")
     data object UpdateCategory: DestinationScreens("categories/{categoryId}/update")
 

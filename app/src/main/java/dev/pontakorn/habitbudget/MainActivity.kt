@@ -184,7 +184,12 @@ fun MainScreenWithNavbar(
                 SettingsScreen()
             }
 
-            composable(route = DestinationScreens.Categories.route) {
+            composable(route = DestinationScreens.Categories.route, arguments = listOf(
+                navArgument("shouldSelect") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                }
+            )) {
                 ListCategoryScreen(navController)
             }
 
