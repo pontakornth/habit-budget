@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import dev.pontakorn.habitbudget.data.Category
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
@@ -84,6 +85,10 @@ fun EditTransactionScreen(
         onClickDestinationWallet = {
             navController.navigate("wallets?selectMode=2")
         },
+        category = viewModel.category,
+        onClickCategory = {
+                          navController.navigate("categories?shouldSelect=true")
+        },
         amount = viewModel.amount,
         onChangeAmount = { viewModel.amount = it },
         transactionDate = viewModel.transactionDate,
@@ -102,6 +107,8 @@ fun EditTransactionScreenContent(
     sourceWallet: Wallet? = null,
     onClickSourceWallet: () -> Unit = {},
     onChangeSourceWallet: (Wallet) -> Unit = {},
+    category: Category? = null,
+    onClickCategory: () -> Unit = {},
     destinationWallet: Wallet? = null,
     onClickDestinationWallet: () -> Unit = {},
     onChangeDestinationWallet: (Wallet) -> Unit = {},
@@ -251,9 +258,9 @@ fun EditTransactionScreenContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
 
-                        Text(text = "Category", fontWeight = FontWeight.Medium, fontSize = 24.sp)
+                        Text(text = category?.name ?: "Choose category", fontWeight = FontWeight.Medium, fontSize = 24.sp)
                         OutlinedButton(
-                            onClick = { /*TODO*/ },
+                            onClick = onClickCategory,
                             shape = RoundedCornerShape(size = 4.dp)
                         ) {
                             Text(text = "Bakery", textAlign = TextAlign.End)
