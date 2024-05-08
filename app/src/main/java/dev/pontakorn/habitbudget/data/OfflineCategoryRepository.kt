@@ -13,6 +13,10 @@ class OfflineCategoryRepository @Inject constructor(private val categoryDao: Cat
         return categoryDao.getByType(categoryType)
     }
 
+    override fun getById(id: Int): Flow<Category> {
+        return categoryDao.getById(id)
+    }
+
     override suspend fun insertCategory(category: Category) {
         categoryDao.insert(category)
     }
