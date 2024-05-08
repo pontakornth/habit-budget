@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 @Composable
 fun ListCategoryScreen(navController: NavController, viewModel: ListCategoryViewModel = hiltViewModel()) {
     val categories = viewModel.uiState.collectAsState()
+    val shouldSelect = navController.currentBackStackEntry?.arguments?.getBoolean("shouldSelect") ?: false
     // TODO: Add categories type
     // TODO: Handle select category
     CategoriesScreen(
@@ -17,7 +18,13 @@ fun ListCategoryScreen(navController: NavController, viewModel: ListCategoryView
             viewModel.onChangeCategoryType(categoryType)
         },
         onClickCategory = {
-            navController.navigate("categories/${it.id}/update")
-        }
+            if (shouldSelect) {
+                navController.previousBackStackEntry?.savedStateHandle?.set("category_id", it.id)
+                navController.popBackStack()
+            } else {
+                navController.navigate("categories/${it.id}/update")
+            }
+        },
+        shouldSelect = shouldSelect
     )
 }

@@ -3,6 +3,7 @@ package dev.pontakorn.habitbudget.ui.categories
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,11 +17,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListCategoryViewModel @Inject constructor(
+    val savedStateHandle: SavedStateHandle,
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<List<Category>>(emptyList())
     val uiState: StateFlow<List<Category>> = _uiState
-    var categoryType by mutableStateOf(CategoryType.EXPENSE)
+    var categoryType by mutableStateOf(checkNotNull(
+        CategoryType.entries.firstOrNull {
+            it.ordinal == (savedStateHandle.get<Int>("categoryType")
+                ?: CategoryType.EXPENSE.ordinal)
+        }
+    )
+    )
 
     fun onChangeCategoryType(newCategoryType: CategoryType) {
         categoryType = newCategoryType

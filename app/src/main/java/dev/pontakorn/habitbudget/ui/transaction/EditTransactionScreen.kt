@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import dev.pontakorn.habitbudget.data.Category
+import dev.pontakorn.habitbudget.data.CategoryType
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
@@ -56,8 +57,10 @@ fun EditTransactionScreen(
     viewModel: EditTransactionViewModel,
     title: String
 ) {
-    val walletIdFromNavController = navController.currentBackStackEntry?.savedStateHandle?.get<Int>("wallet_id")
-    val modeFromNavController = navController.currentBackStackEntry?.savedStateHandle?.get<Int>("mode")
+    val walletIdFromNavController =
+        navController.currentBackStackEntry?.savedStateHandle?.get<Int>("wallet_id")
+    val modeFromNavController =
+        navController.currentBackStackEntry?.savedStateHandle?.get<Int>("mode")
     LaunchedEffect(key1 = walletIdFromNavController, key2 = modeFromNavController) {
         if (modeFromNavController == 1) {
             walletIdFromNavController?.run {
@@ -87,7 +90,9 @@ fun EditTransactionScreen(
         },
         category = viewModel.category,
         onClickCategory = {
-                          navController.navigate("categories?shouldSelect=true")
+            val categoryType =
+                if (viewModel.transactionType == TransactionType.EXPENSE) CategoryType.EXPENSE.ordinal else CategoryType.INCOME.ordinal
+            navController.navigate("categories?shouldSelect=true&categoryType=$categoryType")
         },
         amount = viewModel.amount,
         onChangeAmount = { viewModel.amount = it },
@@ -106,12 +111,10 @@ fun EditTransactionScreenContent(
     onChangeTransactionType: (TransactionType) -> Unit = {},
     sourceWallet: Wallet? = null,
     onClickSourceWallet: () -> Unit = {},
-    onChangeSourceWallet: (Wallet) -> Unit = {},
     category: Category? = null,
     onClickCategory: () -> Unit = {},
     destinationWallet: Wallet? = null,
     onClickDestinationWallet: () -> Unit = {},
-    onChangeDestinationWallet: (Wallet) -> Unit = {},
     // Note: amount is in baht but saved in satang.
     amount: Double = 0.0,
     onChangeAmount: (Double) -> Unit = {},
@@ -247,23 +250,32 @@ fun EditTransactionScreenContent(
                                 onClick = onClickDestinationWallet,
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                Text(text = destinationWallet?.name ?: "Select wallet", textAlign = TextAlign.End)
+                                Text(
+                                    text = destinationWallet?.name ?: "Select wallet",
+                                    textAlign = TextAlign.End
+                                )
                             }
                         }
                     }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Text(text = category?.name ?: "Choose category", fontWeight = FontWeight.Medium, fontSize = 24.sp)
-                        OutlinedButton(
-                            onClick = onClickCategory,
-                            shape = RoundedCornerShape(size = 4.dp)
+                    if (transactionType != TransactionType.TRANSFER) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "Bakery", textAlign = TextAlign.End)
+
+                            Text(
+                                text = category?.name ?: "Choose category",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 24.sp
+                            )
+                            OutlinedButton(
+                                onClick = onClickCategory,
+                                shape = RoundedCornerShape(size = 4.dp)
+                            ) {
+                                Text(text = "Bakery", textAlign = TextAlign.End)
+                            }
                         }
                     }
                     Row(

@@ -30,6 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import dev.pontakorn.habitbudget.data.CategoryType
 import dev.pontakorn.habitbudget.ui.categories.AddCategoryScreen
 import dev.pontakorn.habitbudget.ui.categories.ListCategoryScreen
 import dev.pontakorn.habitbudget.ui.categories.UpdateCategoryScreen
@@ -190,6 +191,10 @@ fun MainScreenWithNavbar(
                 navArgument("shouldSelect") {
                     type = NavType.BoolType
                     defaultValue = false
+                },
+                navArgument("categoryType") {
+                    type = NavType.IntType
+                    defaultValue = CategoryType.EXPENSE.ordinal
                 }
             )) {
                 ListCategoryScreen(navController)

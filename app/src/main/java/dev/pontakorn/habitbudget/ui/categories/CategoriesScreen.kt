@@ -37,6 +37,7 @@ fun CategoriesScreen(
     categoryType: CategoryType = CategoryType.EXPENSE,
     onChangeCategoryType: (CategoryType) -> Unit = {},
     onClickCategory: (Category) -> Unit = {},
+    shouldSelect: Boolean = false
 ) {
     HabitBudgetTheme {
         Surface(
@@ -57,6 +58,7 @@ fun CategoriesScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     FilterChip(
+                        enabled = !shouldSelect,
                         selected = categoryType == CategoryType.EXPENSE,
                         onClick = { onChangeCategoryType(CategoryType.EXPENSE) },
                         label = {
@@ -74,6 +76,7 @@ fun CategoriesScreen(
                             null
                         })
                     FilterChip(
+                        enabled = !shouldSelect,
                         selected = categoryType == CategoryType.INCOME,
                         onClick = { onChangeCategoryType(CategoryType.INCOME) },
                         label = {
