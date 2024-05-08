@@ -1,6 +1,5 @@
 package dev.pontakorn.habitbudget.ui.categories
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,8 +12,9 @@ fun ListCategoryScreen(navController: NavController, viewModel: ListCategoryView
     // TODO: Handle select category
     CategoriesScreen(
         categories = categories.value,
+        categoryType = viewModel.categoryType,
         onChangeCategoryType = { categoryType ->
-            Log.i("example", categoryType.toString())
+            viewModel.onChangeCategoryType(categoryType)
         },
         onClickCategory = {
             navController.navigate("categories/${it.id}/update")

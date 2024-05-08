@@ -6,9 +6,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,9 +30,11 @@ import dev.pontakorn.habitbudget.ui.icons.categoryDefaultIcon
 import dev.pontakorn.habitbudget.ui.icons.findIcon
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
     categories: List<Category> = emptyList(),
+    categoryType: CategoryType = CategoryType.EXPENSE,
     onChangeCategoryType: (CategoryType) -> Unit = {},
     onClickCategory: (Category) -> Unit = {},
 ) {
@@ -48,12 +56,41 @@ fun CategoriesScreen(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Button(onClick = { onChangeCategoryType(CategoryType.INCOME) }) {
-                        Text(text = "Income")
-                    }
-                    Button(onClick = { onChangeCategoryType(CategoryType.EXPENSE) }) {
-                        Text(text = "Expense")
-                    }
+                    FilterChip(
+                        selected = categoryType == CategoryType.EXPENSE,
+                        onClick = { onChangeCategoryType(CategoryType.EXPENSE) },
+                        label = {
+                            Text(text = "Expense")
+                        },
+                        leadingIcon = if (categoryType == CategoryType.EXPENSE) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "Done icon",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
+                        })
+                    FilterChip(
+                        selected = categoryType == CategoryType.INCOME,
+                        onClick = { onChangeCategoryType(CategoryType.INCOME) },
+                        label = {
+                            Text(text = "Income")
+                        },
+                        leadingIcon = if (categoryType == CategoryType.INCOME) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "Done icon",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
+                        },
+                    )
                 }
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()

@@ -1,10 +1,14 @@
 package dev.pontakorn.habitbudget.ui.categories
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.data.Category
 import dev.pontakorn.habitbudget.data.CategoryRepository
+import dev.pontakorn.habitbudget.data.CategoryType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,11 +20,20 @@ class ListCategoryViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<List<Category>>(emptyList())
     val uiState: StateFlow<List<Category>> = _uiState
+    var categoryType by mutableStateOf(CategoryType.EXPENSE)
+
+    fun onChangeCategoryType(newCategoryType: CategoryType) {
+        categoryType = newCategoryType
+        getCategories()
+    }
 
     init {
+        getCategories()
+    }
+
+    private fun getCategories() {
         viewModelScope.launch {
-            // TODO: Implement get by type
-            categoryRepository.getAll().collect { categories ->
+            categoryRepository.getByType(categoryType).collect { categories ->
                 _uiState.value = categories
             }
         }
