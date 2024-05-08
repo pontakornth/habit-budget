@@ -18,6 +18,7 @@ class AddCategoryViewModel @Inject constructor(
                 Category(
                     id = 0, // Default value
                     name = categoryName,
+                    iconName = iconName,
                     categoryType = categoryType,
                 )
             )

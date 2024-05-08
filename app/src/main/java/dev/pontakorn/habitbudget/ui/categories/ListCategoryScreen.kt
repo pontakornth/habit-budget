@@ -10,10 +10,14 @@ import androidx.navigation.NavController
 fun ListCategoryScreen(navController: NavController, viewModel: ListCategoryViewModel = hiltViewModel()) {
     val categories = viewModel.uiState.collectAsState()
     // TODO: Add categories type
+    // TODO: Handle select category
     CategoriesScreen(
         categories = categories.value,
         onChangeCategoryType = { categoryType ->
             Log.i("example", categoryType.toString())
+        },
+        onClickCategory = {
+            navController.navigate("categories/${it.id}/update")
         }
     )
 }

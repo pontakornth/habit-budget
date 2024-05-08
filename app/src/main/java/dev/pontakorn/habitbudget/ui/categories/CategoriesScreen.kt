@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,12 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pontakorn.habitbudget.data.Category
 import dev.pontakorn.habitbudget.data.CategoryType
+import dev.pontakorn.habitbudget.ui.icons.categoryDefaultIcon
+import dev.pontakorn.habitbudget.ui.icons.findIcon
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
 fun CategoriesScreen(
     categories: List<Category> = emptyList(),
     onChangeCategoryType: (CategoryType) -> Unit = {},
+    onClickCategory: (Category) -> Unit = {},
 ) {
     HabitBudgetTheme {
         Surface(
@@ -59,8 +60,11 @@ fun CategoriesScreen(
                 ) {
                     items(categories) { category ->
                         CategoryItemView(
-                            categoryIcon = Icons.Filled.ShoppingCart,
-                            categoryName = category.name
+                            categoryIcon = findIcon(category.iconName) ?: categoryDefaultIcon,
+                            categoryName = category.name,
+                            onClick = {
+                                onClickCategory(category)
+                            }
                         )
                     }
                 }
