@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -19,29 +17,71 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import dev.pontakorn.habitbudget.DestinationScreens
 import dev.pontakorn.habitbudget.data.CategoryType
+import dev.pontakorn.habitbudget.ui.icons.IconInfo
+import dev.pontakorn.habitbudget.ui.icons.categoryDefaultIcon
+import dev.pontakorn.habitbudget.ui.icons.findIcon
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 
 @Composable
 fun EditCategoryScreen(
+    navController: NavController,
+    viewModel: EditCategoryViewModel,
+    onConfirmButtonClick: () -> Unit
+) {
+
+    val selectedIconName =
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("icon_name")
+
+    LaunchedEffect(key1 = selectedIconName) {
+        selectedIconName?.let {
+            viewModel.iconName = it
+        }
+    }
+    EditCategoryScreenContent(
+        categoryName = viewModel.categoryName,
+        onChangeCategoryName = {
+            viewModel.categoryName = it
+        },
+        currentIcon = findIcon(viewModel.iconName) ?: categoryDefaultIcon,
+        onClickIconButton = {
+            navController.navigate(DestinationScreens.Icons.route) {
+                restoreState = true
+            }
+        },
+        categoryType = viewModel.categoryType,
+        onChangeCategoryType = {
+            viewModel.categoryType = it
+        },
+        onBackButtonClick = {
+            navController.popBackStack()
+        },
+        onConfirmButtonClick = onConfirmButtonClick,
+    )
+}
+
+@Composable
+fun EditCategoryScreenContent(
     title: String = "Add Category",
     categoryName: String = "",
     onChangeCategoryName: (String) -> Unit = {},
-    currentType: CategoryType = CategoryType.EXPENSE,
+    categoryType: CategoryType = CategoryType.EXPENSE,
     onChangeCategoryType: (CategoryType) -> Unit = {},
-    currentIcon: ImageVector = Icons.Outlined.Star,
-    currentIconDescription: String = "placeholder",
+    currentIcon: IconInfo = categoryDefaultIcon,
     onClickIconButton: () -> Unit = {},
     onBackButtonClick: () -> Unit = {},
     onConfirmButtonClick: () -> Unit = {}
@@ -85,7 +125,7 @@ fun EditCategoryScreen(
                         )
                         Column {
                             OutlinedButton(onClick = { typeDropdownOpen = true }) {
-                                Text(text = currentType.toString())
+                                Text(text = categoryType.toString())
                             }
                             DropdownMenu(
                                 expanded = typeDropdownOpen,
@@ -130,8 +170,8 @@ fun EditCategoryScreen(
                         )
                         OutlinedIconButton(onClick = onClickIconButton) {
                             Icon(
-                                imageVector = currentIcon,
-                                contentDescription = currentIconDescription
+                                painter = painterResource(id = currentIcon.resourceId),
+                                contentDescription = currentIcon.iconName
                             )
                         }
 
@@ -160,5 +200,5 @@ fun EditCategoryScreen(
 @Preview(showBackground = true)
 @Composable
 fun EditCategoryScreenPreview() {
-    EditCategoryScreen()
+    EditCategoryScreenContent()
 }

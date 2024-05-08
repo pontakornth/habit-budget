@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 @Composable
 fun ListCategoryScreen(navController: NavController, viewModel: ListCategoryViewModel = hiltViewModel()) {
     val categories = viewModel.uiState.collectAsState()
+    // TODO: Add categories type
     CategoriesScreen(
         categories = categories.value,
         onChangeCategoryType = { categoryType ->

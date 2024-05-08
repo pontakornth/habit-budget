@@ -6,8 +6,8 @@ import dev.pontakorn.habitbudget.data.CategoryRepository
 import kotlinx.coroutines.launch
 
 class UpdateCategoryViewModel(
-    private val categoryRepository: CategoryRepository,
-) : EditCategoryViewModel() {
+    categoryRepository: CategoryRepository,
+) : EditCategoryViewModel(categoryRepository) {
     override fun onConfirm() {
         viewModelScope.launch {
             categoryRepository.updateCategory(

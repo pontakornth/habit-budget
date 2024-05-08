@@ -181,7 +181,7 @@ fun MainScreenWithNavbar(
             }
 
             composable(route = DestinationScreens.Settings.route) {
-                SettingsScreen()
+                SettingsScreen(navController)
             }
 
             composable(route = DestinationScreens.Categories.route, arguments = listOf(
