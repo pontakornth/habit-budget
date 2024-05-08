@@ -132,7 +132,7 @@ fun EditCategoryScreenContent(
                                 onDismissRequest = { typeDropdownOpen = false }) {
                                 categoryTypes.forEach { categoryType ->
                                     DropdownMenuItem(text = {
-                                        categoryType.toString()
+                                        Text(text = categoryType.toString())
                                     }, onClick = {
                                         onChangeCategoryType(categoryType)
                                         typeDropdownOpen = false

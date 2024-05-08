@@ -30,6 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import dev.pontakorn.habitbudget.ui.categories.AddCategoryScreen
 import dev.pontakorn.habitbudget.ui.categories.ListCategoryScreen
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.icons.IconSelectionScreen
@@ -194,8 +195,7 @@ fun MainScreenWithNavbar(
             }
 
             composable(route = DestinationScreens.AddCategory.route) {
-                // TODO: Add add category screen
-//                AddCategoryScreen(navController)
+                AddCategoryScreen(navController)
             }
 
 

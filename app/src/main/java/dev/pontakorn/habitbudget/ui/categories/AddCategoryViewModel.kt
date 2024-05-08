@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.data.Category
 import dev.pontakorn.habitbudget.data.CategoryRepository
-import dev.pontakorn.habitbudget.data.CategoryType
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +18,7 @@ class AddCategoryViewModel @Inject constructor(
                 Category(
                     id = 0, // Default value
                     name = categoryName,
-                    categoryType = CategoryType.EXPENSE,
+                    categoryType = categoryType,
                 )
             )
         }
