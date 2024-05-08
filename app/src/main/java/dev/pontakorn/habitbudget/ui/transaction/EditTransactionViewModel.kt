@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.pontakorn.habitbudget.data.Category
+import dev.pontakorn.habitbudget.data.CategoryRepository
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.Wallet
@@ -16,7 +17,8 @@ import java.util.Date
 
 abstract class EditTransactionViewModel(
     val fullTransactionRepository: FullTransactionRepository,
-    val walletRepository: WalletRepository
+    val walletRepository: WalletRepository,
+    val categoryRepository: CategoryRepository
 ) : ViewModel() {
     var category by mutableStateOf<Category?>(null)
     var transactionType by mutableStateOf(TransactionType.EXPENSE)

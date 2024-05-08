@@ -2,6 +2,7 @@ package dev.pontakorn.habitbudget.ui.transaction
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.pontakorn.habitbudget.data.CategoryRepository
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
 import dev.pontakorn.habitbudget.data.WalletRepository
 import javax.inject.Inject
@@ -10,6 +11,7 @@ import javax.inject.Inject
 class AddTransactionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     fullTransactionRepository: FullTransactionRepository,
-    walletRepository: WalletRepository
-) : EditTransactionViewModel(fullTransactionRepository, walletRepository) {
+    walletRepository: WalletRepository,
+    categoryRepository: CategoryRepository
+) : EditTransactionViewModel(fullTransactionRepository, walletRepository, categoryRepository) {
 }
