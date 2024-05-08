@@ -84,7 +84,12 @@ fun EditTransactionScreen(
         title = title,
         onBack = { navController.popBackStack() },
         transactionType = viewModel.transactionType,
-        onChangeTransactionType = { viewModel.transactionType = it },
+        onChangeTransactionType = {
+            if (viewModel.transactionType != it) {
+                viewModel.category = null
+            }
+            viewModel.transactionType = it
+        },
         sourceWallet = viewModel.sourceWallet,
         onClickSourceWallet = {
             navController.navigate("wallets?selectMode=1")
@@ -279,7 +284,10 @@ fun EditTransactionScreenContent(
                                 onClick = onClickCategory,
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                Text(text = category?.name ?: "Choose category", textAlign = TextAlign.End)
+                                Text(
+                                    text = category?.name ?: "Choose category",
+                                    textAlign = TextAlign.End
+                                )
                             }
                         }
                     }
