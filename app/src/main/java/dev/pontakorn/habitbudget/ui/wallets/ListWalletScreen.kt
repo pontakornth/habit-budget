@@ -14,7 +14,16 @@ fun ListWalletScreen(
 
     fun onClickWallet(walletId: Int) {
         // TODO: Find a type-safe way to do this.
-        navController.navigate("wallets/$walletId/update")
+        val selectMode = navController.currentBackStackEntry?.arguments?.getInt("selectMode") ?: 0
+        if (selectMode != 0) {
+            navController.previousBackStackEntry?.savedStateHandle?.run {
+                set("wallet_id", walletId)
+                set("mode", selectMode)
+            }
+            navController.popBackStack()
+        } else {
+            navController.navigate("wallets/$walletId/update")
+        }
     }
     WalletScreen(
         wallets = wallets.value,

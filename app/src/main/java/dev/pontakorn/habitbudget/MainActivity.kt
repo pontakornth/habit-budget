@@ -154,7 +154,11 @@ fun MainScreenWithNavbar(
             composable(route = DestinationScreens.HabitTracking.route) {
                 HabitTracking()
             }
-            composable(route = DestinationScreens.Wallets.route) {
+            composable(
+                route = DestinationScreens.Wallets.route,
+                arguments = listOf(
+                    navArgument("selectMode") { type = NavType.IntType; defaultValue = 0 }
+                )) {
                 ListWalletScreen(navController)
             }
             composable(route = DestinationScreens.AddWallet.route) {

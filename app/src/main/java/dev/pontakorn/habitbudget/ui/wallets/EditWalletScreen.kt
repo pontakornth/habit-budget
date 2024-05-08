@@ -14,10 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
-import dev.pontakorn.habitbudget.data.CategoryType
 import dev.pontakorn.habitbudget.ui.icons.IconInfo
 import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
@@ -45,10 +40,6 @@ fun EditWalletScreenContent(
     onBackButtonClick: () -> Unit = {},
     onConfirmButtonClick: () -> Unit = {}
 ) {
-    val categoryTypes = listOf(CategoryType.EXPENSE, CategoryType.INCOME)
-    var typeDropdownOpen by remember {
-        mutableStateOf(false)
-    }
     HabitBudgetTheme {
         Surface(
             modifier = Modifier

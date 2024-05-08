@@ -55,22 +55,39 @@ fun EditTransactionScreen(
     viewModel: EditTransactionViewModel,
     title: String
 ) {
+    val walletIdFromNavController = navController.currentBackStackEntry?.savedStateHandle?.get<Int>("wallet_id")
+    val modeFromNavController = navController.currentBackStackEntry?.savedStateHandle?.get<Int>("mode")
+    LaunchedEffect(key1 = walletIdFromNavController, key2 = modeFromNavController) {
+        if (modeFromNavController == 1) {
+            walletIdFromNavController?.run {
+                // TODO: Get wallet by id
+                Log.i("EditTransactionScreen", "select wallet $this as source wallet")
+            }
+        } else if (modeFromNavController == 2) {
+            walletIdFromNavController?.run {
+                Log.i("EditTransactionScreen", "select wallet $this as destination wallet")
+            }
+        }
+    }
     EditTransactionScreenContent(
         title = title,
         onBack = { navController.popBackStack() },
         transactionType = viewModel.transactionType,
         onChangeTransactionType = { viewModel.transactionType = it },
         sourceWallet = viewModel.sourceWallet,
-        onClickSourceWallet = { /*TODO: Navigate to wallet screen*/ },
+        onClickSourceWallet = {
+            navController.navigate("wallets?selectMode=1")
+        },
         destinationWallet = viewModel.destinationWallet,
-        onClickDestinationWallet = { /*TODO: Navigate to wallet screen*/ },
-        // TODO: Handle decimal input
+        onClickDestinationWallet = {
+            navController.navigate("wallets?selectMode=2")
+        },
         amount = viewModel.amount,
         onChangeAmount = { viewModel.amount = it },
         transactionDate = viewModel.transactionDate,
         onChangeTransactionDate = { viewModel.transactionDate = it },
         transactionTime = viewModel.transactionTime,
-        onChangeTransactionTime = { viewModel.transactionTime = it}
+        onChangeTransactionTime = { viewModel.transactionTime = it }
     )
 }
 
@@ -117,7 +134,10 @@ fun EditTransactionScreenContent(
     var timePickerState = rememberTimePickerState()
     LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
 
-        Log.d("EditTransactionScreenContent", "Hour: ${timePickerState.hour}, Minute: ${timePickerState.minute}")
+        Log.d(
+            "EditTransactionScreenContent",
+            "Hour: ${timePickerState.hour}, Minute: ${timePickerState.minute}"
+        )
         onChangeTransactionTime(timePickerState.hour to timePickerState.minute)
     }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -194,10 +214,13 @@ fun EditTransactionScreenContent(
                             } else "Wallet", fontWeight = FontWeight.Medium, fontSize = 24.sp
                         )
                         OutlinedButton(
-                            onClick = { /*TODO*/ },
+                            onClick = onClickSourceWallet,
                             shape = RoundedCornerShape(size = 4.dp)
                         ) {
-                            Text(text = "Bank Account", textAlign = TextAlign.End)
+                            Text(
+                                text = sourceWallet?.name ?: "Select wallet",
+                                textAlign = TextAlign.End
+                            )
                         }
                     }
                     if (transactionType == TransactionType.TRANSFER) {
@@ -212,10 +235,10 @@ fun EditTransactionScreenContent(
                                 text = "To wallet", fontWeight = FontWeight.Medium, fontSize = 24.sp
                             )
                             OutlinedButton(
-                                onClick = { /*TODO*/ },
+                                onClick = onClickDestinationWallet,
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                Text(text = "Bank Account", textAlign = TextAlign.End)
+                                Text(text = destinationWallet?.name ?: "Select wallet", textAlign = TextAlign.End)
                             }
                         }
                     }
@@ -265,7 +288,10 @@ fun EditTransactionScreenContent(
                                 onClick = { showDatePicker = true },
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                Text(text = getFormattedDate(transactionDate ?: Date()), textAlign = TextAlign.End)
+                                Text(
+                                    text = getFormattedDate(transactionDate ?: Date()),
+                                    textAlign = TextAlign.End
+                                )
                             }
                             if (showDatePicker) {
                                 DatePickerDialog(
@@ -301,7 +327,12 @@ fun EditTransactionScreenContent(
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
                                 // TODO: Use function to actually forma
-                                Text(text = getFormattedTime(transactionTime.first, transactionTime.second), textAlign = TextAlign.End)
+                                Text(
+                                    text = getFormattedTime(
+                                        transactionTime.first,
+                                        transactionTime.second
+                                    ), textAlign = TextAlign.End
+                                )
                             }
                             if (showTimePicker) {
                                 TimePickerDialog(

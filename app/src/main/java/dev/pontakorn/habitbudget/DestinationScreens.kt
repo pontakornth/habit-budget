@@ -5,7 +5,7 @@ sealed class DestinationScreens(val route: String) {
     data object AddTransaction: DestinationScreens("transactions/add")
     data object UpdateTransaction: DestinationScreens("transactions/{transactionId}/update")
     data object HabitTracking: DestinationScreens("habitTracking")
-    data object Wallets: DestinationScreens("wallets")
+    data object Wallets: DestinationScreens("wallets?selectMode={selectMode}")
     data object AddWallet: DestinationScreens("wallets/add")
     data object UpdateWallet: DestinationScreens("wallets/{walletId}/update")
     data object Settings: DestinationScreens("settings")
@@ -15,6 +15,7 @@ sealed class DestinationScreens(val route: String) {
     data object UpdateCategory: DestinationScreens("categories/{categoryId}/update")
 
     data object Icons: DestinationScreens("icons")
+
 
 
 
