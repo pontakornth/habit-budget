@@ -32,6 +32,7 @@ import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pontakorn.habitbudget.ui.categories.AddCategoryScreen
 import dev.pontakorn.habitbudget.ui.categories.ListCategoryScreen
+import dev.pontakorn.habitbudget.ui.categories.UpdateCategoryScreen
 import dev.pontakorn.habitbudget.ui.habit.HabitTracking
 import dev.pontakorn.habitbudget.ui.icons.IconSelectionScreen
 import dev.pontakorn.habitbudget.ui.icons.allIcons
@@ -196,6 +197,14 @@ fun MainScreenWithNavbar(
 
             composable(route = DestinationScreens.AddCategory.route) {
                 AddCategoryScreen(navController)
+            }
+
+            composable(route = DestinationScreens.UpdateCategory.route, arguments = listOf(
+                navArgument("categoryId") {
+                    type = NavType.IntType
+                }
+            )) {
+                UpdateCategoryScreen(navController)
             }
 
 
