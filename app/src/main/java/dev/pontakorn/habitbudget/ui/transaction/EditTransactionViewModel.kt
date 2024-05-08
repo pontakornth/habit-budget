@@ -58,5 +58,15 @@ abstract class EditTransactionViewModel(
         }
     }
 
+    fun getCategory(categoryIdFromNavController: Int?) {
+        categoryIdFromNavController?.let { categoryId ->
+            viewModelScope.launch {
+                categoryRepository.getById(categoryId).collect { newCategory ->
+                    category = newCategory
+                }
+            }
+        }
+    }
+
 
 }

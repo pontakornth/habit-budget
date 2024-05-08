@@ -61,6 +61,8 @@ fun EditTransactionScreen(
         navController.currentBackStackEntry?.savedStateHandle?.get<Int>("wallet_id")
     val modeFromNavController =
         navController.currentBackStackEntry?.savedStateHandle?.get<Int>("mode")
+    val categoryIdFromNavController =
+        navController.currentBackStackEntry?.savedStateHandle?.get<Int>("category_id")
     LaunchedEffect(key1 = walletIdFromNavController, key2 = modeFromNavController) {
         if (modeFromNavController == 1) {
             walletIdFromNavController?.run {
@@ -74,6 +76,9 @@ fun EditTransactionScreen(
                 Log.i("EditTransactionScreen", "select wallet $this as destination wallet")
             }
         }
+    }
+    LaunchedEffect(key1 = categoryIdFromNavController) {
+        viewModel.getCategory(categoryIdFromNavController)
     }
     EditTransactionScreenContent(
         title = title,
@@ -266,7 +271,7 @@ fun EditTransactionScreenContent(
                         ) {
 
                             Text(
-                                text = category?.name ?: "Choose category",
+                                text = "Category",
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 24.sp
                             )
@@ -274,7 +279,7 @@ fun EditTransactionScreenContent(
                                 onClick = onClickCategory,
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                Text(text = "Bakery", textAlign = TextAlign.End)
+                                Text(text = category?.name ?: "Choose category", textAlign = TextAlign.End)
                             }
                         }
                     }
