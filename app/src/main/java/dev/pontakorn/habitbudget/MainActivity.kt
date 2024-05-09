@@ -138,7 +138,6 @@ fun MainScreenWithNavbar(
             modifier = Modifier.padding(paddingValues)
 
         ) {
-            // TODO: Replace dummy view with view + viewmodel (actual logic)
             composable(route = DestinationScreens.Transactions.route) {
                 ListTransactionScreen(navController)
             }

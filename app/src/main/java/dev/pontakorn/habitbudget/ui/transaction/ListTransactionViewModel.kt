@@ -10,6 +10,7 @@ import dev.pontakorn.habitbudget.ui.icons.findIcon
 import dev.pontakorn.habitbudget.ui.icons.walletDefaultIcon
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,22 +26,29 @@ class ListTransactionViewModel @Inject constructor(fullTransactionRepository: Fu
     init {
         viewModelScope.launch {
             // TODO: Handle month and year
-            fullTransactionRepository.getSummary().collect {
-                _transactionSummary.value = it
-            }
-            fullTransactionRepository.getAll().collect {
-                _transactionList.value = it.map { transaction ->
+            fullTransactionRepository.getAll().map {
+                it.map { transaction ->
                     TransactionDisplayItem(
                         transactionTitle = transaction.category.name,
                         transactionDate = transaction.transaction.transactionTime,
                         // TODO: Find a better way to do this.
                         transactionAmount = transaction.transaction.amount / 100.0,
-                        transactionIcon = findIcon(transaction.category.iconName) ?: categoryDefaultIcon,
-                        transactionSourceWalletIcon = findIcon(transaction.sourceWallet.iconName) ?: walletDefaultIcon
+                        transactionIcon = findIcon(transaction.category.iconName)
+                            ?: categoryDefaultIcon,
+                        transactionSourceWalletIcon = findIcon(transaction.sourceWallet.iconName)
+                            ?: walletDefaultIcon
 
                     )
                 }
+            }.collect {
+                _transactionList.value = it
             }
+        }
+        viewModelScope.launch {
+            fullTransactionRepository.getSummary().collect {
+                _transactionSummary.value = it
+            }
+
         }
     }
 

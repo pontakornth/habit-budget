@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +36,7 @@ fun TransactionScreen(
     income: Double,
     expense: Double,
     remaining: Double,
-    transactions: List<TransactionDisplayItem> = listOf(),
+    transactions: List<TransactionDisplayItem>,
     onClickTransaction: (TransactionDisplayItem) -> Unit = {},
     onClickMonthSelector: () -> Unit = {},
     onChangeMonth: (String) -> Unit = {},
@@ -118,11 +120,11 @@ fun TransactionScreen(
                     }
                 }
                 // TODO: Use actual lazy columns or something
-                Column(
+                LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.padding(vertical = 16.dp, horizontal = 0.dp)
                 ) {
-                    for (transaction in transactions) {
+                    items(transactions) {transaction ->
                         TransactionItemView(
                             transactionTitle = transaction.transactionTitle,
                             transactionAmount = transaction.transactionAmount,
@@ -144,7 +146,8 @@ fun TransactionScreenPreview() {
     TransactionScreen(
         income = 9999.0,
         expense = 9999.0,
-        remaining = 0.0
+        remaining = 0.0,
+        transactions = emptyList()
     )
 }
 
