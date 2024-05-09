@@ -68,5 +68,7 @@ abstract class EditTransactionViewModel(
         }
     }
 
+    abstract fun onConfirm(): Unit
+
 
 }

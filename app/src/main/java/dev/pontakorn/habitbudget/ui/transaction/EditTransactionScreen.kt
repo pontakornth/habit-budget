@@ -109,7 +109,11 @@ fun EditTransactionScreen(
         transactionDate = viewModel.transactionDate,
         onChangeTransactionDate = { viewModel.transactionDate = it },
         transactionTime = viewModel.transactionTime,
-        onChangeTransactionTime = { viewModel.transactionTime = it }
+        onChangeTransactionTime = { viewModel.transactionTime = it },
+        onConfirm = {
+            viewModel.onConfirm()
+            navController.popBackStack()
+        }
     )
 }
 

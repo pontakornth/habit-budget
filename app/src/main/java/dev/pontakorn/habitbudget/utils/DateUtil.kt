@@ -18,6 +18,14 @@ object DateUtil {
         return currentMonth to nextMonth
     }
 
+    fun getActualDate(date: Date, hour: Int, minute: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.set(Calendar.HOUR_OF_DAY, hour)
+        calendar.set(Calendar.MINUTE, minute)
+        return calendar.time
+    }
+
     fun getFormattedDate(date: Date): String {
         return dateFormatter.format(date)
     }
