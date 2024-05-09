@@ -14,7 +14,8 @@ interface FullTransactionDao {
     @DatabaseTransaction
     @Query(
         "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
-                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id"
+                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
+        "ORDER BY t.transaction_time DESC"
 
     )
     fun getAllTransactions(): Flow<List<FullTransaction>>
@@ -23,7 +24,8 @@ interface FullTransactionDao {
     @Query(
         "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
                 "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
-                "WHERE t.transaction_type = :transactionType"
+                "WHERE t.transaction_type = :transactionType " +
+        "ORDER BY t.transaction_time DESC"
     )
     fun getByType(transactionType: TransactionType): Flow<List<FullTransaction>>
 
@@ -31,7 +33,8 @@ interface FullTransactionDao {
     @Query(
         "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
                 "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
-                "WHERE t.transaction_time >= :timeBegin AND t.transaction_time < :timeEnd"
+                "WHERE t.transaction_time >= :timeBegin AND t.transaction_time < :timeEnd " +
+        "ORDER BY t.transaction_time DESC"
     )
     fun getDuring(timeBegin: Date, timeEnd: Date): Flow<List<FullTransaction>>
 
@@ -41,7 +44,8 @@ interface FullTransactionDao {
         "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
                 "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
                 "WHERE t.transaction_time >= :timeBegin AND t.transaction_time < :timeEnd " +
-                "AND t.transaction_type = :transactionType"
+                "AND t.transaction_type = :transactionType " +
+        "ORDER BY t.transaction_time DESC"
     )
     fun getDuringByType(
         timeBegin: Date,
