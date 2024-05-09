@@ -44,7 +44,8 @@ fun WalletScreen(
                 )
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    userScrollEnabled = true
                 ) {
                     items(wallets) { wallet ->
                         WalletItemView(

@@ -88,7 +88,8 @@ fun TransactionScreen(
                 }
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 0.dp)
+                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 0.dp),
+                    userScrollEnabled = true
                 ) {
                     items(transactions) {transaction ->
                         TransactionItemView(

@@ -96,7 +96,8 @@ fun CategoriesScreen(
                     )
                 }
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    userScrollEnabled = true
                 ) {
                     items(categories) { category ->
                         CategoryItemView(
