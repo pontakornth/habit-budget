@@ -20,25 +20,31 @@ class AddTransactionViewModel @Inject constructor(
     fullTransactionRepository: FullTransactionRepository,
     walletRepository: WalletRepository,
     categoryRepository: CategoryRepository
-) : EditTransactionViewModel(fullTransactionRepository, walletRepository, categoryRepository) {
+) : EditTransactionViewModel(
+    savedStateHandle,
+    fullTransactionRepository,
+    walletRepository,
+    categoryRepository
+) {
     override fun onConfirm() {
-        Log.i("AddTransactionViewModel", "Create transaction")
-        Log.i("AddTransactionViewModel", "Category: ${category?.name}")
-        Log.i("AddTransactionViewModel", "TransactionType: $transactionType")
-        Log.i("AddTransactionViewModel", "Amount (baht): $amount")
-        Log.i("AddTransactionViewModel", "Source Wallet: ${sourceWallet?.name}")
-        Log.i("AddTransactionViewModel", "Destination Wallet: ${destinationWallet?.name}")
-        Log.i("AddTransactionViewModel", "Transaction Date: ${getFormattedDate(transactionDate)}")
-        Log.i("AddTransactionViewModel", "Transaction Time: ${transactionTime.first} ${transactionTime.second}")
-
+//        Log.i("AddTransactionViewModel", "Create transaction")
+//        Log.i("AddTransactionViewModel", "Category: ${category?.name}")
+//        Log.i("AddTransactionViewModel", "TransactionType: $transactionType")
+//        Log.i("AddTransactionViewModel", "Amount (baht): $amount")
+//        Log.i("AddTransactionViewModel", "Source Wallet: ${sourceWallet?.name}")
+//        Log.i("AddTransactionViewModel", "Destination Wallet: ${destinationWallet?.name}")
+//        Log.i("AddTransactionViewModel", "Transaction Date: ${getFormattedDate(transactionDate)}")
+//        Log.i("AddTransactionViewModel", "Transaction Time: ${transactionTime.first} ${transactionTime.second}")
+//
         // Sanitize input to ensure everything works correctly.
-        if (transactionType == TransactionType.TRANSFER) {
-            category = null
+        if (uiState.value.transactionType == TransactionType.TRANSFER) {
+            deleteCategory()
         } else {
-            destinationWallet = null
+            deleteDestinationWallet()
         }
 
-        val actualTransactionTime = getActualDate(transactionDate, transactionTime.first, transactionTime.second)
+        val actualTransactionTime =
+            getActualDate(uiState.value.transactionDate, uiState.value.transactionTime.first, uiState.value.transactionTime.second)
 
 
 
@@ -47,16 +53,16 @@ class AddTransactionViewModel @Inject constructor(
             fullTransactionRepository.insertTransaction(
                 Transaction(
                     id = 0,
-                    categoryId = category?.id,
-                    transactionType = transactionType,
+                    categoryId = uiState.value.category?.id,
+                    transactionType = uiState.value.transactionType,
                     // TODO: Prevent user from using null source wallet id
-                    sourceWalletId = checkNotNull( sourceWallet?.id),
-                    destinationWalletId = destinationWallet?.id,
+                    sourceWalletId = checkNotNull(uiState.value.sourceWallet?.id),
+                    destinationWalletId = uiState.value.destinationWallet?.id,
                     // Satang to baht
-                    amount = (amount * 100).toInt(),
+                    amount = (uiState.value.amount * 100).toInt(),
                     transactionTime = actualTransactionTime
 
-                    )
+                )
             )
         }
 

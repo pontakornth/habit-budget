@@ -92,7 +92,7 @@ fun TransactionScreen(
                 ) {
                     items(transactions) {transaction ->
                         TransactionItemView(
-                            transactionTitle = transaction.transactionTitle,
+                            transactionTitle = "${transaction.transactionTitle} - ${transaction.id}",
                             transactionAmount = transaction.transactionAmount,
                             transactionIcon = transaction.transactionIcon,
                             transactionDate = transaction.transactionDate,

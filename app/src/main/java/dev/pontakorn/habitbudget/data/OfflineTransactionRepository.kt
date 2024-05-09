@@ -2,7 +2,6 @@ package dev.pontakorn.habitbudget.data
 
 import dev.pontakorn.habitbudget.utils.DateUtil
 import kotlinx.coroutines.flow.Flow
-import java.util.Calendar
 
 class OfflineTransactionRepository(private val transactionDao: TransactionDao) :
     TransactionRepository {
@@ -26,6 +25,10 @@ class OfflineTransactionRepository(private val transactionDao: TransactionDao) :
     ): Flow<List<Transaction>> {
         val (currentMonth, nextMonth) = DateUtil.getMonthDuration(month, year)
         return transactionDao.getByTypeDuring(currentMonth, nextMonth, transactionType)
+    }
+
+    override fun getById(id: Int): Flow<Transaction> {
+        return transactionDao.getById(id)
     }
 
     override suspend fun insertTransaction(transaction: Transaction) {

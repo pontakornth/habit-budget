@@ -9,6 +9,7 @@ fun UpdateTransactionScreen(
     navController: NavController,
     viewModel: UpdateTransactionViewModel = hiltViewModel()
 ) {
+
     EditTransactionScreen(
         navController = navController,
         viewModel = viewModel,

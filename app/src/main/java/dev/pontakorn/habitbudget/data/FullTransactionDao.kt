@@ -13,8 +13,8 @@ import androidx.room.Transaction as DatabaseTransaction
 interface FullTransactionDao {
     @DatabaseTransaction
     @Query(
-        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
-                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
+        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.category_id " +
+                "LEFT JOIN wallet w ON t.source_wallet_id = w.wallet_id OR t.destination_wallet_id = w.wallet_id " +
         "ORDER BY t.transaction_time DESC"
 
     )
@@ -22,8 +22,8 @@ interface FullTransactionDao {
 
     @DatabaseTransaction
     @Query(
-        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
-                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
+        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.category_id " +
+                "LEFT JOIN wallet w ON t.source_wallet_id = w.wallet_id OR t.destination_wallet_id = w.wallet_id " +
                 "WHERE t.transaction_type = :transactionType " +
         "ORDER BY t.transaction_time DESC"
     )
@@ -31,8 +31,8 @@ interface FullTransactionDao {
 
     @DatabaseTransaction
     @Query(
-        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
-                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
+        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.category_id " +
+                "LEFT JOIN wallet w ON t.source_wallet_id = w.wallet_id OR t.destination_wallet_id = w.wallet_id " +
                 "WHERE t.transaction_time >= :timeBegin AND t.transaction_time < :timeEnd " +
         "ORDER BY t.transaction_time DESC"
     )
@@ -41,8 +41,8 @@ interface FullTransactionDao {
 
     @DatabaseTransaction
     @Query(
-        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
-                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
+        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.category_id " +
+                "LEFT JOIN wallet w ON t.source_wallet_id = w.wallet_id OR t.destination_wallet_id = w.wallet_id " +
                 "WHERE t.transaction_time >= :timeBegin AND t.transaction_time < :timeEnd " +
                 "AND t.transaction_type = :transactionType " +
         "ORDER BY t.transaction_time DESC"
@@ -56,9 +56,9 @@ interface FullTransactionDao {
 
     @DatabaseTransaction
     @Query(
-        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
-                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
-        "WHERE t.id = :id"
+        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.category_id " +
+                "LEFT JOIN wallet w ON t.source_wallet_id = w.wallet_id OR t.destination_wallet_id = w.wallet_id " +
+        "WHERE t.transaction_id = :id"
 
     )
     fun getById(id: Int): Flow<FullTransaction>

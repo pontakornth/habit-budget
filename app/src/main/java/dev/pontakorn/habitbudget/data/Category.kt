@@ -11,7 +11,9 @@ enum class CategoryType {
 
 @Entity
 data class Category(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "category_id")
+    val id: Int,
     val name: String,
     @ColumnInfo(name = "category_type") val categoryType: CategoryType,
     @ColumnInfo(name = "icon_name", defaultValue = "Shopping") val iconName: String = "Shopping"

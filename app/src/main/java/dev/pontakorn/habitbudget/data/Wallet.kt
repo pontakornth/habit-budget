@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Wallet(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo("wallet_id")
+    val id: Int,
     var name: String,
 
     // I will use hardcoded icon for this.

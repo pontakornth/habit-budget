@@ -11,10 +11,11 @@ import androidx.room.migration.AutoMigrationSpec
 
 @Database(
     entities = [Category::class, Transaction::class, Wallet::class],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = AppDatabase.RenameIconName::class),
-        AutoMigration(from = 2, to = 3)
+        AutoMigration(from = 2, to = 3),
+    AutoMigration(from = 3, to = 4, spec = AppDatabase.RenamePrimaryColumn::class)
     ]
 )
 @TypeConverters(TimestampConverter::class)
@@ -27,6 +28,25 @@ abstract class AppDatabase : RoomDatabase() {
         )
     )
     class RenameIconName : AutoMigrationSpec
+
+    @RenameColumn.Entries(
+        RenameColumn(
+            tableName = "Transaction",
+            fromColumnName = "id",
+            toColumnName = "transaction_id"
+        ),
+        RenameColumn(
+            tableName = "Wallet",
+            fromColumnName = "id",
+            toColumnName = "wallet_id"
+        ),
+        RenameColumn(
+            tableName = "Category",
+            fromColumnName = "id",
+            toColumnName = "category_id"
+        )
+    )
+    class RenamePrimaryColumn : AutoMigrationSpec
 
     abstract fun categoryDao(): CategoryDao
     abstract fun transactionDao(): TransactionDao

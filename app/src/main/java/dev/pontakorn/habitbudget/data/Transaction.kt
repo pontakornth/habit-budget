@@ -13,7 +13,9 @@ enum class TransactionType {
 
 @Entity
 data class Transaction(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "transaction_id")
+    val id: Int,
     // Transfer does not require category ID.
     @ColumnInfo(name = "category_id") val categoryId: Int?,
     // This allow empty category and transfer

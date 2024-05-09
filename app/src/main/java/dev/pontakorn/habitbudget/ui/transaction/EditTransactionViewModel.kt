@@ -1,50 +1,47 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.pontakorn.habitbudget.data.Category
 import dev.pontakorn.habitbudget.data.CategoryRepository
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
 import dev.pontakorn.habitbudget.data.TransactionType
-import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.data.WalletRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 
 abstract class EditTransactionViewModel(
+    val savedStateHandle: SavedStateHandle,
     val fullTransactionRepository: FullTransactionRepository,
     val walletRepository: WalletRepository,
     val categoryRepository: CategoryRepository
 ) : ViewModel() {
-    var category by mutableStateOf<Category?>(null)
-    var transactionType by mutableStateOf(TransactionType.EXPENSE)
-    var sourceWallet by mutableStateOf<Wallet?>(null)
 
-    // Only matter if transfer
-    var destinationWallet by mutableStateOf<Wallet?>(null)
-    var amount by mutableDoubleStateOf(0.0)
-    var transactionDate by mutableStateOf(Date())
-    var transactionTime by mutableStateOf(0 to 0)
+    private var _uiState = MutableStateFlow(TransactionViewState())
+    val uiState: StateFlow<TransactionViewState> = _uiState.asStateFlow()
+
+    protected fun setState(newState: TransactionViewState) {
+        _uiState.value = newState
+    }
 
     fun allowAddTransaction(): Boolean {
-        if (transactionType == TransactionType.TRANSFER) {
-            if (destinationWallet == null) return false
+        if (_uiState.value.transactionType == TransactionType.TRANSFER) {
+            if (_uiState.value.destinationWallet == null) return false
         } else {
-            if (category == null) return false
+            if (_uiState.value.category == null) return false
         }
-        if (sourceWallet == null) return false
-        if (amount == 0.0) return false
+        if (_uiState.value.sourceWallet == null) return false
+        if (_uiState.value.amount <= 0.0) return false
         return true
     }
 
     fun getSourceWallet(walletId: Int) {
         viewModelScope.launch {
             walletRepository.getWalletById(walletId).collect { wallet ->
-                sourceWallet = wallet
+                _uiState.value = _uiState.value.copy(sourceWallet = wallet)
             }
 
         }
@@ -53,7 +50,7 @@ abstract class EditTransactionViewModel(
     fun getDestinationWallet(walletId: Int) {
         viewModelScope.launch {
             walletRepository.getWalletById(walletId).collect { wallet ->
-                destinationWallet = wallet
+                _uiState.value = _uiState.value.copy(destinationWallet = wallet)
             }
         }
     }
@@ -62,13 +59,37 @@ abstract class EditTransactionViewModel(
         categoryIdFromNavController?.let { categoryId ->
             viewModelScope.launch {
                 categoryRepository.getById(categoryId).collect { newCategory ->
-                    category = newCategory
+                    _uiState.value = _uiState.value.copy(category = newCategory)
                 }
             }
         }
     }
 
+    fun deleteCategory() {
+        _uiState.value = _uiState.value.copy(category = null)
+    }
+
+    fun deleteDestinationWallet() {
+        _uiState.value = _uiState.value.copy(destinationWallet = null)
+    }
+
+    fun setTransactionType(newTransactionType: TransactionType) {
+        _uiState.value = _uiState.value.copy(transactionType = newTransactionType)
+    }
+
     abstract fun onConfirm(): Unit
+    fun setAmount(newAmount: Double) {
+        _uiState.value = _uiState.value.copy(amount = newAmount)
+    }
+
+    fun setTransactionDate(newDate: Date) {
+        _uiState.value = _uiState.value.copy(transactionDate = newDate)
+    }
+
+    fun setTransactionTime(newTime: Pair<Int, Int>) {
+        _uiState.value = _uiState.value.copy(transactionTime = newTime)
+
+    }
 
 
 }

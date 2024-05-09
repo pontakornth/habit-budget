@@ -24,6 +24,9 @@ interface TransactionDao {
     @Query("SELECT * from `transaction` WHERE transaction_time >= :timeBegin AND transaction_time < :timeEnd AND transaction_type = :transactionType")
     fun getByTypeDuring(timeBegin: Date, timeEnd: Date, transactionType: TransactionType): Flow<List<Transaction>>
 
+    @Query("SELECT * from `transaction` WHERE transaction_id = :transactionId")
+    fun getById(transactionId: Int): Flow<Transaction>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTransaction(transaction: Transaction)
 

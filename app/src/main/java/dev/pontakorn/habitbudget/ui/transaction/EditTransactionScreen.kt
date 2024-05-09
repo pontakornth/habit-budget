@@ -24,6 +24,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,6 +58,7 @@ fun EditTransactionScreen(
     viewModel: EditTransactionViewModel,
     title: String
 ) {
+    val uiState = viewModel.uiState.collectAsState()
     val walletIdFromNavController =
         navController.currentBackStackEntry?.savedStateHandle?.get<Int>("wallet_id")
     val modeFromNavController =
@@ -83,33 +85,33 @@ fun EditTransactionScreen(
     EditTransactionScreenContent(
         title = title,
         onBack = { navController.popBackStack() },
-        transactionType = viewModel.transactionType,
+        transactionType = uiState.value.transactionType,
         onChangeTransactionType = {
-            if (viewModel.transactionType != it) {
-                viewModel.category = null
+            if (uiState.value.transactionType != it) {
+                viewModel.deleteCategory()
             }
-            viewModel.transactionType = it
+            viewModel.setTransactionType(it)
         },
-        sourceWallet = viewModel.sourceWallet,
+        sourceWallet = uiState.value.sourceWallet,
         onClickSourceWallet = {
             navController.navigate("wallets?selectMode=1")
         },
-        destinationWallet = viewModel.destinationWallet,
+        destinationWallet = uiState.value.destinationWallet,
         onClickDestinationWallet = {
             navController.navigate("wallets?selectMode=2")
         },
-        category = viewModel.category,
+        category = uiState.value.category,
         onClickCategory = {
             val categoryType =
-                if (viewModel.transactionType == TransactionType.EXPENSE) CategoryType.EXPENSE.ordinal else CategoryType.INCOME.ordinal
+                if (uiState.value.transactionType == TransactionType.EXPENSE) CategoryType.EXPENSE.ordinal else CategoryType.INCOME.ordinal
             navController.navigate("categories?shouldSelect=true&categoryType=$categoryType")
         },
-        amount = viewModel.amount,
-        onChangeAmount = { viewModel.amount = it },
-        transactionDate = viewModel.transactionDate,
-        onChangeTransactionDate = { viewModel.transactionDate = it },
-        transactionTime = viewModel.transactionTime,
-        onChangeTransactionTime = { viewModel.transactionTime = it },
+        amount = uiState.value.amount,
+        onChangeAmount = { viewModel.setAmount(it) },
+        transactionDate = uiState.value.transactionDate,
+        onChangeTransactionDate = { viewModel.setTransactionDate(it) },
+        transactionTime = uiState.value.transactionTime,
+        onChangeTransactionTime = { viewModel.setTransactionTime(it) },
         onConfirm = {
             viewModel.onConfirm()
             navController.popBackStack()
@@ -144,6 +146,15 @@ fun EditTransactionScreenContent(
     var rawAmount by remember {
         // Note: This assumes the value is not abnormally high or low.
         mutableStateOf(amount.toString())
+    }
+    var receivedInitialAmount by remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(key1 = amount) {
+        if (!receivedInitialAmount) {
+            rawAmount = amount.toString()
+            receivedInitialAmount = true
+        }
     }
     var transactionTypeDropdownOpen by remember {
         mutableStateOf(false)

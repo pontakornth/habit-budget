@@ -11,6 +11,7 @@ interface TransactionRepository {
         year: Int,
         transactionType: TransactionType
     ): Flow<List<Transaction>>
+    fun getById(id: Int): Flow<Transaction>
 
     suspend fun insertTransaction(transaction: Transaction)
     suspend fun updateTransaction(transaction: Transaction)
