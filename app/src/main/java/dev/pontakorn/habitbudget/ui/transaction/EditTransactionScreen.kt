@@ -111,7 +111,7 @@ fun EditTransactionScreen(
 
         datePickerState.setSelection(utcCalendar.timeInMillis)
     }
-    var timePickerState = rememberTimePickerState()
+    var timePickerState = rememberTimePickerState(initialHour = uiState.value.transactionTime.first, initialMinute =  uiState.value.transactionTime.second)
     LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
 
         Log.d(
