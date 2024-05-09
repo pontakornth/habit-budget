@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
 import dev.pontakorn.habitbudget.data.TransactionSummary
+import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.ui.icons.categoryDefaultIcon
 import dev.pontakorn.habitbudget.ui.icons.findIcon
 import dev.pontakorn.habitbudget.ui.icons.walletDefaultIcon
@@ -29,11 +30,14 @@ class ListTransactionViewModel @Inject constructor(fullTransactionRepository: Fu
             fullTransactionRepository.getAll().map {
                 it.map { transaction ->
                     TransactionDisplayItem(
-                        transactionTitle = transaction.category.name,
+                        id = transaction.transaction.id,
+                        transactionTitle = if (transaction.transaction.transactionType == TransactionType.TRANSFER) {
+                            "Transfer"
+                        } else transaction.category!!.name,
                         transactionDate = transaction.transaction.transactionTime,
                         // TODO: Find a better way to do this.
                         transactionAmount = transaction.transaction.amount / 100.0,
-                        transactionIcon = findIcon(transaction.category.iconName)
+                        transactionIcon = findIcon(transaction.category?.iconName ?: "Wallet")
                             ?: categoryDefaultIcon,
                         transactionSourceWalletIcon = findIcon(transaction.sourceWallet.iconName)
                             ?: walletDefaultIcon

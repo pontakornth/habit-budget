@@ -17,6 +17,9 @@ fun ListTransactionScreen(
         income = transactionSummary.value?.income?.div(100.0) ?: 0.0,
         expense = transactionSummary.value?.expense?.div(100.0) ?: 0.0,
         remaining = transactionSummary.value?.remaining?.div(100.0) ?: 0.0,
-        transactions = transactionList.value
+        transactions = transactionList.value,
+        onClickTransaction = {
+            navController.navigate("transactions/${it.id}/update")
+        }
     )
 }

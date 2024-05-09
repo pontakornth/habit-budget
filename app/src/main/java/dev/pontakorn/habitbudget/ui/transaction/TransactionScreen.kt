@@ -119,7 +119,6 @@ fun TransactionScreen(
                         }
                     }
                 }
-                // TODO: Use actual lazy columns or something
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.padding(vertical = 16.dp, horizontal = 0.dp)
@@ -130,7 +129,10 @@ fun TransactionScreen(
                             transactionAmount = transaction.transactionAmount,
                             transactionIcon = transaction.transactionIcon,
                             transactionDate = transaction.transactionDate,
-                            transactionSourceWalletIcon = transaction.transactionSourceWalletIcon
+                            transactionSourceWalletIcon = transaction.transactionSourceWalletIcon,
+                            onClick = {
+                                onClickTransaction(transaction)
+                            }
                         )
                     }
                 }

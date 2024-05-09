@@ -9,7 +9,7 @@ data class FullTransaction(
         parentColumn = "category_id",
         entityColumn = "id"
     )
-    val category: Category,
+    val category: Category?,
 
     @Relation(
         parentColumn = "source_wallet_id",

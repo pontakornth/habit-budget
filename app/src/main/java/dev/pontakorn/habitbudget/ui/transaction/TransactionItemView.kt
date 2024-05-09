@@ -2,6 +2,7 @@ package dev.pontakorn.habitbudget.ui.transaction
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,8 @@ fun TransactionItemView(
     transactionIcon: IconInfo,
     transactionSourceWalletIcon: IconInfo,
     transactionDestinationWalletIcon: IconInfo? = null,
-    transactionDate: Date
+    transactionDate: Date,
+    onClick: () -> Unit = {}
 ) {
     val formatter = DateTimeFormatter.ofPattern("dd/MMMM/yyyy")
     val localTransactionDate = LocalDateTime.ofInstant(transactionDate.toInstant(), ZoneId.systemDefault())
@@ -42,6 +44,7 @@ fun TransactionItemView(
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth(1f)
+                .clickable { onClick() }
         ) {
             Row(
                 modifier = Modifier
