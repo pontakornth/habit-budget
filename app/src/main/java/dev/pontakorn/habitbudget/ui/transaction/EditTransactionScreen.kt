@@ -52,7 +52,9 @@ import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.ui.utils.TimePickerDialog
 import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedDate
 import dev.pontakorn.habitbudget.utils.DecimalFormatter
+import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,7 +94,22 @@ fun EditTransactionScreen(
     }
     // Set initial
     LaunchedEffect(true) {
-        datePickerState.setSelection(uiState.value.transactionDate.time)
+        // Black magic by https://stackoverflow.com/questions/2873119/changing-timezone-without-changing-time-in-java
+
+        // transactionDate is LOCAL TIME
+        val defaultCalendar = Calendar.getInstance(TimeZone.getDefault())
+        defaultCalendar.timeInMillis = uiState.value.transactionDate.time
+        val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        Log.i("EditTransactionScreen", "UTC Before: ${utcCalendar.timeInMillis}")
+        utcCalendar.set(Calendar.YEAR, defaultCalendar.get(Calendar.YEAR))
+        utcCalendar.set(Calendar.DAY_OF_YEAR, defaultCalendar.get(Calendar.DAY_OF_YEAR))
+        utcCalendar.set(Calendar.HOUR_OF_DAY, defaultCalendar.get(Calendar.HOUR_OF_DAY))
+        utcCalendar.set(Calendar.MINUTE, defaultCalendar.get(Calendar.MINUTE))
+        utcCalendar.set(Calendar.SECOND, defaultCalendar.get(Calendar.SECOND))
+        Log.i("EditTransactionScreen", "UTC After: ${utcCalendar.timeInMillis}")
+
+
+        datePickerState.setSelection(utcCalendar.timeInMillis)
     }
     var timePickerState = rememberTimePickerState()
     LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
