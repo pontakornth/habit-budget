@@ -4,7 +4,8 @@ import dev.pontakorn.habitbudget.utils.DateUtil
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
-class OfflineFullTransactionRepository(private val fullTransactionDao: FullTransactionDao): FullTransactionRepository {
+class OfflineFullTransactionRepository(private val fullTransactionDao: FullTransactionDao) :
+    FullTransactionRepository {
     override fun getAll(): Flow<List<FullTransaction>> {
         return fullTransactionDao.getAllTransactions()
     }
@@ -40,9 +41,6 @@ class OfflineFullTransactionRepository(private val fullTransactionDao: FullTrans
         return fullTransactionDao.getSummaryDuring(currentMonth, nextMonth)
     }
 
-    override fun getEarliestDate(): Flow<Date> {
-        return fullTransactionDao.getEarliestTransactionTime()
-    }
 
     override suspend fun insertTransaction(transaction: Transaction) {
         fullTransactionDao.insertTransaction(transaction)

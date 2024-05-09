@@ -185,7 +185,7 @@ fun EditTransactionScreenContent(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Add Transaction",
+                    text = title,
                     fontWeight = FontWeight.Bold,
                     fontSize = 48.sp,
                     modifier = Modifier.fillMaxWidth(),

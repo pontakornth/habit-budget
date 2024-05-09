@@ -21,6 +21,5 @@ fun ListTransactionScreen(
         onClickTransaction = {
             navController.navigate("transactions/${it.id}/update")
         },
-        monthRange = viewModel.monthRange,
     )
 }

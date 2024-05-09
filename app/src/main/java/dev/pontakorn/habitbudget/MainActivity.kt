@@ -41,6 +41,7 @@ import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.ui.transaction.AddTransactionScreen
 import dev.pontakorn.habitbudget.ui.transaction.ListTransactionScreen
+import dev.pontakorn.habitbudget.ui.transaction.UpdateTransactionScreen
 import dev.pontakorn.habitbudget.ui.wallets.AddWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.ListWalletScreen
 import dev.pontakorn.habitbudget.ui.wallets.UpdateWalletScreen
@@ -150,7 +151,7 @@ fun MainScreenWithNavbar(
                     navArgument("transactionId") { type = NavType.IntType }
                 )
             ) {
-                // TODO: Add update transaction screen
+                UpdateTransactionScreen(navController)
 
             }
             composable(route = DestinationScreens.HabitTracking.route) {

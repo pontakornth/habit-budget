@@ -1,5 +1,6 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,8 +36,10 @@ class UpdateTransactionViewModel @Inject constructor(
                 amount = fullTransaction.transaction.amount / 100.0
                 transactionDate = getPureDate(fullTransaction.transaction.transactionTime)
 
+
             }
         }
+        Log.i("UpdateTransactionViewModel", "transactionId: $transactionId")
     }
 
     override fun onConfirm() {
