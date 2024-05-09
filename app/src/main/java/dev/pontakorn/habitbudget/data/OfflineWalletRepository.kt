@@ -11,6 +11,10 @@ class OfflineWalletRepository(private val walletDao: WalletDao): WalletRepositor
         return walletDao.getById(walletId)
     }
 
+    override fun getWalletSummary(): Flow<List<WalletSummary>> {
+        return walletDao.getAllWalletSummary()
+    }
+
     override suspend fun insertWallet(wallet: Wallet) {
         walletDao.insert(wallet)
     }

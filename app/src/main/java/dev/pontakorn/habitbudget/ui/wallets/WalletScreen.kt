@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pontakorn.habitbudget.data.Wallet
+import dev.pontakorn.habitbudget.data.WalletSummary
 import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.icons.findIcon
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
@@ -24,6 +25,7 @@ import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 @Composable
 fun WalletScreen(
     wallets: List<Wallet> = emptyList(),
+    walletSummaries: List<WalletSummary> = emptyList(),
     onClickWalletCard: (Int) -> Unit = {}
 ) {
     HabitBudgetTheme {
@@ -44,12 +46,14 @@ fun WalletScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(wallets) {
+                    items(wallets) { wallet ->
                         WalletItemView(
-                            walletIcon = findIcon(it.iconName) ?: allIcons[0],
-                            walletName = it.name,
-                            walletDisplayAmount = "0.0",
-                            onClickWalletItem = { onClickWalletCard(it.id) }
+                            walletIcon = findIcon(wallet.iconName) ?: allIcons[0],
+                            walletName = wallet.name,
+                            walletDisplayAmount = walletSummaries.firstOrNull { wallet.id == it.walletId }?.balance?.div(
+                                100.0
+                            )?.toString() ?: "0.0",
+                            onClickWalletItem = { onClickWalletCard(wallet.id) }
                         )
                     }
                 }

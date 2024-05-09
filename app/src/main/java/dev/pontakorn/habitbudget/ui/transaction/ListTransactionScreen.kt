@@ -20,6 +20,7 @@ fun ListTransactionScreen(
         transactions = transactionList.value,
         onClickTransaction = {
             navController.navigate("transactions/${it.id}/update")
-        }
+        },
+        monthRange = viewModel.monthRange,
     )
 }

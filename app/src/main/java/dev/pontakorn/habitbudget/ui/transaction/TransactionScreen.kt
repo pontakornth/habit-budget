@@ -40,11 +40,11 @@ fun TransactionScreen(
     onClickTransaction: (TransactionDisplayItem) -> Unit = {},
     onClickMonthSelector: () -> Unit = {},
     onChangeMonth: (String) -> Unit = {},
+    monthRange: List<MonthPickerChoice> = emptyList()
 ) {
 
 
     // TODO: Use actual earliest date.
-    val months = listOf("Jan 2024", "Feb 2024", "Mar 2024")
     var monthPickerExpanded by remember {
         mutableStateOf(false)
     }
@@ -111,9 +111,9 @@ fun TransactionScreen(
                     DropdownMenu(
                         expanded = monthPickerExpanded,
                         onDismissRequest = { monthPickerExpanded = false }) {
-                        months.forEach { choice ->
-                            DropdownMenuItem(text = { Text(text = choice) }, onClick = {
-                                selectedMonth = choice
+                        monthRange.forEach { choice ->
+                            DropdownMenuItem(text = { Text(text = choice.toString()) }, onClick = {
+                                selectedMonth = choice.toString()
                                 monthPickerExpanded = false
                             })
                         }

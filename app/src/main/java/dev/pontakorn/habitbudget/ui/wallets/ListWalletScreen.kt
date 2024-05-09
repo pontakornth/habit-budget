@@ -11,6 +11,7 @@ fun ListWalletScreen(
     viewModel: ListWalletViewModel = hiltViewModel()
 ) {
     val wallets = viewModel.uiState.collectAsState()
+    val walletSummaries = viewModel.walletSummary.collectAsState()
 
     fun onClickWallet(walletId: Int) {
         // TODO: Find a type-safe way to do this.
@@ -27,6 +28,7 @@ fun ListWalletScreen(
     }
     WalletScreen(
         wallets = wallets.value,
+        walletSummaries = walletSummaries.value,
         onClickWalletCard = { onClickWallet(it) }
     )
 }

@@ -38,7 +38,7 @@ fun TransactionItemView(
     transactionDate: Date,
     onClick: () -> Unit = {}
 ) {
-    val formatter = DateTimeFormatter.ofPattern("dd/MMMM/yyyy")
+    val formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy")
     val localTransactionDate = LocalDateTime.ofInstant(transactionDate.toInstant(), ZoneId.systemDefault())
     HabitBudgetTheme {
         ElevatedCard(

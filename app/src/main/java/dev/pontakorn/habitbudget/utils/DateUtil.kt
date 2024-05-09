@@ -10,7 +10,8 @@ object DateUtil {
     private val timeFormatter = SimpleDateFormat("HH:mm")
     fun getMonthDuration(month: Int, year: Int): Pair<Date, Date> {
         val calendar = Calendar.getInstance()
-        calendar.set(year, month, 1)
+        // Month is 0 based. Who designed this?
+        calendar.set(year, month - 1, 1)
         val currentMonth = calendar.time
         // Yes, Calendar can handle this.
         calendar.set(year, month + 1, 1)

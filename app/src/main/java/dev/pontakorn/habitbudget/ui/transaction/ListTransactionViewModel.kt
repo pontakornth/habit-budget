@@ -1,5 +1,8 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +27,13 @@ class ListTransactionViewModel @Inject constructor(fullTransactionRepository: Fu
     val transactionSummary = _transactionSummary.asStateFlow()
     private var _transactionList = MutableStateFlow<List<TransactionDisplayItem>>(emptyList())
     val transactionList = _transactionList.asStateFlow()
+    var earliestDate by mutableStateOf(Date())
+
+    val monthRange: List<MonthPickerChoice>
+        get() {
+            val calender = Calendar.getInstance()
+            return MonthPickerChoice.getMonthsRange(earliestDate, calender.time)
+        }
 
 
     init {
@@ -53,6 +65,11 @@ class ListTransactionViewModel @Inject constructor(fullTransactionRepository: Fu
                 _transactionSummary.value = it
             }
 
+        }
+        viewModelScope.launch {
+            fullTransactionRepository.getEarliestDate().collect {
+                earliestDate = it
+            }
         }
     }
 
