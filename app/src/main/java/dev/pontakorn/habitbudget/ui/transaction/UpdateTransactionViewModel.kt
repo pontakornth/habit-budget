@@ -48,10 +48,6 @@ class UpdateTransactionViewModel @Inject constructor(
 
             }
         }
-//        viewModelScope.launch {
-//            delay(10.seconds)
-//            setTransactionType(TransactionType.INCOME)
-//        }
     }
 
     override fun onConfirm() {
