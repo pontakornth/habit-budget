@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package dev.pontakorn.habitbudget.ui.transaction
 
 import android.util.Log
@@ -12,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -47,11 +51,11 @@ import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.ui.utils.TimePickerDialog
 import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedDate
-import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedTime
 import dev.pontakorn.habitbudget.utils.DecimalFormatter
 import java.util.Date
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditTransactionScreen(
     navController: NavController,
@@ -68,19 +72,36 @@ fun EditTransactionScreen(
     LaunchedEffect(key1 = walletIdFromNavController, key2 = modeFromNavController) {
         if (modeFromNavController == 1) {
             walletIdFromNavController?.run {
-                // TODO: Get wallet by id
                 viewModel.getSourceWallet(walletIdFromNavController)
-                Log.i("EditTransactionScreen", "select wallet $this as source wallet")
             }
         } else if (modeFromNavController == 2) {
             walletIdFromNavController?.run {
                 viewModel.getDestinationWallet(walletIdFromNavController)
-                Log.i("EditTransactionScreen", "select wallet $this as destination wallet")
             }
         }
     }
     LaunchedEffect(key1 = categoryIdFromNavController) {
         viewModel.getCategory(categoryIdFromNavController)
+    }
+    var datePickerState =
+        rememberDatePickerState(initialSelectedDateMillis = uiState.value.transactionDate.time)
+    LaunchedEffect(key1 = datePickerState.selectedDateMillis) {
+        datePickerState.selectedDateMillis?.let {
+            viewModel.setTransactionDate(Date(it))
+        }
+    }
+    // Set initial
+    LaunchedEffect(true) {
+        datePickerState.setSelection(uiState.value.transactionDate.time)
+    }
+    var timePickerState = rememberTimePickerState()
+    LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
+
+        Log.d(
+            "EditTransactionScreenContent",
+            "Hour: ${timePickerState.hour}, Minute: ${timePickerState.minute}"
+        )
+        viewModel.setTransactionTime(timePickerState.hour to timePickerState.minute)
     }
     EditTransactionScreenContent(
         title = title,
@@ -106,12 +127,10 @@ fun EditTransactionScreen(
                 if (uiState.value.transactionType == TransactionType.EXPENSE) CategoryType.EXPENSE.ordinal else CategoryType.INCOME.ordinal
             navController.navigate("categories?shouldSelect=true&categoryType=$categoryType")
         },
-        amount = uiState.value.amount,
-        onChangeAmount = { viewModel.setAmount(it) },
-        transactionDate = uiState.value.transactionDate,
-        onChangeTransactionDate = { viewModel.setTransactionDate(it) },
-        transactionTime = uiState.value.transactionTime,
-        onChangeTransactionTime = { viewModel.setTransactionTime(it) },
+        amountString = viewModel.amountString,
+        onChangeAmountString = { viewModel.setNewAmountString(it) },
+        datePickerState = datePickerState,
+        timePickerState = timePickerState,
         onConfirm = {
             viewModel.onConfirm()
             navController.popBackStack()
@@ -133,52 +152,21 @@ fun EditTransactionScreenContent(
     destinationWallet: Wallet? = null,
     onClickDestinationWallet: () -> Unit = {},
     // Note: amount is in baht but saved in satang.
-    amount: Double = 0.0,
-    onChangeAmount: (Double) -> Unit = {},
-    transactionDate: Date? = Date(),
-    onChangeTransactionDate: (Date) -> Unit = {},
-    transactionTime: Pair<Int, Int> = 0 to 0,
-    onChangeTransactionTime: (Pair<Int, Int>) -> Unit = {},
+    amountString: String = "0.0",
+    onChangeAmountString: (String) -> Unit = {},
+    datePickerState: DatePickerState,
+    timePickerState: TimePickerState,
     onBack: () -> Unit = {},
     onConfirm: () -> Unit = {},
     allowConfirm: Boolean = true,
 ) {
 
-    // Raw
-    var rawAmount by remember {
-        // Note: This assumes the value is not abnormally high or low.
-        mutableStateOf(amount.toString())
-    }
-    var receivedInitialAmount by remember {
-        mutableStateOf(false)
-    }
-    LaunchedEffect(key1 = amount) {
-        if (!receivedInitialAmount) {
-            rawAmount = amount.toString()
-            receivedInitialAmount = true
-        }
-    }
     var transactionTypeDropdownOpen by remember {
         mutableStateOf(false)
     }
-    // TODO: Add date range
-    var datePickerState = rememberDatePickerState(initialSelectedDateMillis = transactionDate?.time)
-    LaunchedEffect(key1 = datePickerState.selectedDateMillis) {
-        datePickerState.selectedDateMillis?.let {
-            onChangeTransactionDate(Date(it))
-        }
-    }
+//    var datePickerState = rememberDatePickerState(initialSelectedDateMillis = transactionDate?.time)
     var showDatePicker by remember { mutableStateOf(false) }
 
-    var timePickerState = rememberTimePickerState()
-    LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
-
-        Log.d(
-            "EditTransactionScreenContent",
-            "Hour: ${timePickerState.hour}, Minute: ${timePickerState.minute}"
-        )
-        onChangeTransactionTime(timePickerState.hour to timePickerState.minute)
-    }
     var showTimePicker by remember { mutableStateOf(false) }
     val decimalFormatter = DecimalFormatter()
     val transactionTypes = listOf(
@@ -317,10 +305,11 @@ fun EditTransactionScreenContent(
 
                         Text(text = "Amount", fontWeight = FontWeight.Medium, fontSize = 24.sp)
                         OutlinedTextField(
-                            value = rawAmount,
+                            value = amountString,
                             onValueChange = {
-                                rawAmount = decimalFormatter.cleanup(it)
-                                onChangeAmount(it.ifEmpty { "0" }.toBigDecimal().toDouble())
+                                onChangeAmountString(it)
+//                                rawAmount = decimalFormatter.cleanup(it)
+//                                onChangeAmount(it.ifEmpty { "0" }.toBigDecimal().toDouble())
                             },
                             shape = RoundedCornerShape(size = 4.dp),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
@@ -340,7 +329,9 @@ fun EditTransactionScreenContent(
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
                                 Text(
-                                    text = getFormattedDate(transactionDate ?: Date()),
+                                    text = datePickerState.selectedDateMillis?.let {
+                                        getFormattedDate(Date(it))
+                                    } ?: "Select date",
                                     textAlign = TextAlign.End
                                 )
                             }
@@ -377,12 +368,9 @@ fun EditTransactionScreenContent(
                                 onClick = { showTimePicker = true },
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
-                                // TODO: Use function to actually forma
                                 Text(
-                                    text = getFormattedTime(
-                                        transactionTime.first,
-                                        transactionTime.second
-                                    ), textAlign = TextAlign.End
+                                    text = timePickerState.hour.toString() + ":" + timePickerState.minute,
+                                    textAlign = TextAlign.End
                                 )
                             }
                             if (showTimePicker) {
@@ -430,13 +418,18 @@ fun EditTransactionScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun EditTransactionScreenPreview() {
-    EditTransactionScreenContent()
+    EditTransactionScreenContent(
+        datePickerState = rememberDatePickerState(),
+        timePickerState = rememberTimePickerState()
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun EditTransactionScreenTransferPreview() {
     EditTransactionScreenContent(
-        transactionType = TransactionType.TRANSFER
+        transactionType = TransactionType.TRANSFER,
+        datePickerState = rememberDatePickerState(),
+        timePickerState = rememberTimePickerState()
     )
 }

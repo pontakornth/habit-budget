@@ -1,5 +1,8 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,8 +26,12 @@ abstract class EditTransactionViewModel(
     private var _uiState = MutableStateFlow(TransactionViewState())
     val uiState: StateFlow<TransactionViewState> = _uiState.asStateFlow()
 
+    var amountString by mutableStateOf(uiState.value.amount.toString())
+
     protected fun setState(newState: TransactionViewState) {
         _uiState.value = newState
+        // Set amount string
+        setNewAmountString(newState.amount.toString())
     }
 
     fun allowAddTransaction(): Boolean {
@@ -80,6 +87,16 @@ abstract class EditTransactionViewModel(
     abstract fun onConfirm(): Unit
     fun setAmount(newAmount: Double) {
         _uiState.value = _uiState.value.copy(amount = newAmount)
+    }
+
+    fun setNewAmountString(newAmountString: String) {
+        if (newAmountString.isEmpty()) return
+        try {
+            setAmount(newAmountString.toDouble())
+            amountString = newAmountString
+        } catch (e: Exception) {
+            return
+        }
     }
 
     fun setTransactionDate(newDate: Date) {
