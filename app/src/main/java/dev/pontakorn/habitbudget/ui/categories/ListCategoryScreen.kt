@@ -9,8 +9,6 @@ import androidx.navigation.NavController
 fun ListCategoryScreen(navController: NavController, viewModel: ListCategoryViewModel = hiltViewModel()) {
     val categories = viewModel.uiState.collectAsState()
     val shouldSelect = navController.currentBackStackEntry?.arguments?.getBoolean("shouldSelect") ?: false
-    // TODO: Add categories type
-    // TODO: Handle select category
     CategoriesScreen(
         categories = categories.value,
         categoryType = viewModel.categoryType,
