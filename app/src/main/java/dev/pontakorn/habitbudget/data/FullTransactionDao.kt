@@ -101,6 +101,9 @@ interface FullTransactionDao {
         )
     }
 
+    @Query("SELECT MIN(transaction_time) FROM `transaction`")
+    fun getEarliestTransactionTime(): Flow<Date>
+
 
     @Insert
     suspend fun insertTransaction(transaction: Transaction)
