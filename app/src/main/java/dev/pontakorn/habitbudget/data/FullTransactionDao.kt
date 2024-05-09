@@ -49,6 +49,16 @@ interface FullTransactionDao {
         transactionType: TransactionType
     ): Flow<List<FullTransaction>>
 
+
+    @DatabaseTransaction
+    @Query(
+        "SELECT * from `transaction` t LEFT JOIN category c ON t.category_id = c.id " +
+                "LEFT JOIN wallet w ON t.source_wallet_id = w.id OR t.destination_wallet_id = w.id " +
+        "WHERE t.id = :id"
+
+    )
+    fun getById(id: Int): Flow<FullTransaction>
+
     @DatabaseTransaction
     @Query(
         "SELECT SUM(IIF(transaction_type = :firstType, amount, 0))  income, " +

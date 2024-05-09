@@ -26,6 +26,22 @@ object DateUtil {
         return calendar.time
     }
 
+    fun getHourAndMinute(date: Date): Pair<Int, Int> {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        return calendar.get(Calendar.HOUR_OF_DAY) to calendar.get(Calendar.MINUTE)
+    }
+
+    fun getPureDate(date: Date): Date {
+        val calender = Calendar.getInstance()
+        calender.time = date
+        calender.set(Calendar.HOUR_OF_DAY, 0)
+        calender.set(Calendar.MINUTE, 0)
+        calender.set(Calendar.SECOND, 0)
+        calender.set(Calendar.MILLISECOND, 0)
+        return calender.time
+    }
+
     fun getFormattedDate(date: Date): String {
         return dateFormatter.format(date)
     }
