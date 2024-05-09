@@ -115,7 +115,8 @@ fun EditTransactionScreen(
         onConfirm = {
             viewModel.onConfirm()
             navController.popBackStack()
-        }
+        },
+        allowConfirm = viewModel.allowAddTransaction()
     )
 }
 
@@ -140,6 +141,7 @@ fun EditTransactionScreenContent(
     onChangeTransactionTime: (Pair<Int, Int>) -> Unit = {},
     onBack: () -> Unit = {},
     onConfirm: () -> Unit = {},
+    allowConfirm: Boolean = true,
 ) {
 
     // Raw
@@ -414,7 +416,7 @@ fun EditTransactionScreenContent(
                         Button(onClick = onBack) {
                             Text(text = "Back")
                         }
-                        Button(onClick = onConfirm) {
+                        Button(enabled = allowConfirm, onClick = onConfirm) {
                             Text(text = "Confirm")
                         }
                     }
