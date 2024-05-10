@@ -25,7 +25,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -111,7 +110,7 @@ fun EditTransactionScreen(
         Log.i("EditTransactionScreen", "UTC After: ${utcCalendar.timeInMillis}")
 
 
-//        datePickerState.setSelection(utcCalendar.timeInMillis)
+        datePickerState.selectedDateMillis = utcCalendar.timeInMillis
     }
     var hourState by remember {
         mutableIntStateOf(uiState.value.transactionTime.first)
@@ -127,18 +126,6 @@ fun EditTransactionScreen(
         hourState = uiState.value.transactionTime.first
         minuteState = uiState.value.transactionTime.second
 
-    }
-    var timePickerState = rememberTimePickerState(
-        initialHour = uiState.value.transactionTime.first,
-        initialMinute = uiState.value.transactionTime.second
-    )
-    LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
-
-        Log.d(
-            "EditTransactionScreenContent",
-            "Hour: ${timePickerState.hour}, Minute: ${timePickerState.minute}"
-        )
-        viewModel.setTransactionTime(timePickerState.hour to timePickerState.minute)
     }
     EditTransactionScreenContent(
         title = title,
@@ -172,7 +159,7 @@ fun EditTransactionScreen(
         onTimeChange = { newHour, newMinute ->
             hourState = newHour
             minuteState = newMinute
-//            uiState.value.
+            viewModel.setTransactionTime(hourState to minuteState)
 
         },
         onConfirm = {
@@ -201,7 +188,7 @@ fun EditTransactionScreenContent(
     datePickerState: DatePickerState,
     hour: Int = 0,
     minute: Int = 0,
-    onTimeChange: (Int, Int) -> Unit = { _, _ -> {}},
+    onTimeChange: (Int, Int) -> Unit = { _, _ -> {} },
     onBack: () -> Unit = {},
     onConfirm: () -> Unit = {},
     allowConfirm: Boolean = true,
@@ -419,7 +406,7 @@ fun EditTransactionScreenContent(
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
                                 Text(
-                                    text = localHour.toString() + ":" + localMinute.toString(),
+                                    text = "$hour:$minute",
                                     textAlign = TextAlign.End
                                 )
                             }
