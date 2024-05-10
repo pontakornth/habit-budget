@@ -15,7 +15,7 @@ import androidx.room.migration.AutoMigrationSpec
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = AppDatabase.RenameIconName::class),
         AutoMigration(from = 2, to = 3),
-    AutoMigration(from = 3, to = 4, spec = AppDatabase.RenamePrimaryColumn::class)
+        AutoMigration(from = 3, to = 4, spec = AppDatabase.RenamePrimaryColumn::class)
     ]
 )
 @TypeConverters(TimestampConverter::class)
@@ -52,6 +52,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun fullTransactionDao(): FullTransactionDao
     abstract fun walletDao(): WalletDao
+
+    abstract fun streakDao(): StreakDao
 
     companion object {
         @Volatile
