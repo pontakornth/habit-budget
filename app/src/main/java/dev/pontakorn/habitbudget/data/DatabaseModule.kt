@@ -61,5 +61,15 @@ class DatabaseModule {
         fun provideFullTransactionRepository(fullTransactionDao: FullTransactionDao): FullTransactionRepository {
             return OfflineFullTransactionRepository(fullTransactionDao)
         }
+
+        @Provides
+        fun provideStreakDao(appDatabase: AppDatabase): StreakDao {
+            return appDatabase.streakDao()
+        }
+
+        @Provides
+        fun provideStreakRepository(streakDao: StreakDao): StreakRepository {
+            return OfflineStreakRepository(streakDao)
+        }
     }
 }
