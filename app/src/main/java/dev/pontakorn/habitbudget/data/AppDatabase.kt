@@ -10,8 +10,8 @@ import androidx.room.TypeConverters
 import androidx.room.migration.AutoMigrationSpec
 
 @Database(
-    entities = [Category::class, Transaction::class, Wallet::class],
-    version = 4,
+    entities = [Category::class, Transaction::class, Wallet::class, Streak::class],
+    version = 5,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = AppDatabase.RenameIconName::class),
         AutoMigration(from = 2, to = 3),
