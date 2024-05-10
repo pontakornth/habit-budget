@@ -11,6 +11,7 @@ import dev.pontakorn.habitbudget.data.FullTransactionRepository
 import dev.pontakorn.habitbudget.data.StreakRepository
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.WalletRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -108,6 +109,14 @@ abstract class EditTransactionViewModel(
     fun setTransactionTime(newTime: Pair<Int, Int>) {
         _uiState.value = _uiState.value.copy(transactionTime = newTime)
 
+    }
+
+    fun createStreak() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (!streakRepository.streaksExistToday()) {
+                streakRepository.insertForToday()
+            }
+        }
     }
 
 

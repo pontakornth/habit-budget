@@ -39,7 +39,7 @@ object DateUtil {
         calender.set(Calendar.HOUR_OF_DAY, 0)
         calender.set(Calendar.MINUTE, 0)
         calender.set(Calendar.SECOND, 0)
-        calender.set(Calendar.MILLISECOND, 1)
+        calender.set(Calendar.MILLISECOND, 0)
         return calender.time
     }
 

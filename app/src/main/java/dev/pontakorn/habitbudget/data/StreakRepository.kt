@@ -5,7 +5,7 @@ import java.util.Calendar
 
 interface StreakRepository {
     fun getAll(): Flow<List<Streak>>
-    fun streaksExistToday(): Flow<Boolean>
+    suspend fun streaksExistToday(): Boolean
     suspend fun insertStreak(streak: Streak)
 
     suspend fun insertForToday() {

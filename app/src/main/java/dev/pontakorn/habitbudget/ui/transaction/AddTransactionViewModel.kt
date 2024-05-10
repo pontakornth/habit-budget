@@ -70,13 +70,6 @@ class AddTransactionViewModel @Inject constructor(
                 )
             )
         }
-        viewModelScope.launch {
-            streakRepository.streaksExistToday().collect { exists ->
-                if (!exists) {
-                    streakRepository.insertForToday()
-                }
-            }
-        }
-
+        createStreak()
     }
 }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
+import androidx.room.Transaction as DatabaseTransaction
 
 @Dao
 interface StreakDao {
@@ -14,7 +15,8 @@ interface StreakDao {
     @Query("SELECT * FROM streak")
     fun getAllStreaks(): Flow<List<Streak>>
 
+    @DatabaseTransaction
     @Query("SELECT COUNT(1) FROM streak WHERE streak_date = :date")
-    fun hasStreak(date: Long): Flow<Int>
+    suspend fun hasStreak(date: Long): Int
 
 }

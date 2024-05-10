@@ -2,7 +2,6 @@ package dev.pontakorn.habitbudget.data
 
 import dev.pontakorn.habitbudget.utils.DateUtil.getPureDate
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import java.util.Date
 
 class OfflineStreakRepository(private val streakDao: StreakDao): StreakRepository {
@@ -10,10 +9,10 @@ class OfflineStreakRepository(private val streakDao: StreakDao): StreakRepositor
         return streakDao.getAllStreaks()
     }
 
-    override fun streaksExistToday(): Flow<Boolean> {
+    override suspend fun streaksExistToday(): Boolean {
         // Note:
         val midnight = getPureDate(Date())
-        return streakDao.hasStreak(midnight.time).map { count -> count > 0 }
+        return streakDao.hasStreak(midnight.time) > 0
     }
 
     override suspend fun insertStreak(streak: Streak) {
