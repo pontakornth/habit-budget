@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.pontakorn.habitbudget.data.CategoryRepository
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
+import dev.pontakorn.habitbudget.data.StreakRepository
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.WalletRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,8 @@ abstract class EditTransactionViewModel(
     val savedStateHandle: SavedStateHandle,
     val fullTransactionRepository: FullTransactionRepository,
     val walletRepository: WalletRepository,
-    val categoryRepository: CategoryRepository
+    val categoryRepository: CategoryRepository,
+    val streakRepository: StreakRepository
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(TransactionViewState())

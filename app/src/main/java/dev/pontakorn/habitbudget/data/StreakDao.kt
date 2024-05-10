@@ -14,4 +14,7 @@ interface StreakDao {
     @Query("SELECT * FROM streak")
     fun getAllStreaks(): Flow<List<Streak>>
 
+    @Query("SELECT COUNT(1) FROM streak WHERE streak_date = :date")
+    fun hasStreak(date: Long): Flow<Int>
+
 }

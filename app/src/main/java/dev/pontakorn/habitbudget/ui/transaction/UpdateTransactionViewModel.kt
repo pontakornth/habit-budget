@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.data.CategoryRepository
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
+import dev.pontakorn.habitbudget.data.StreakRepository
 import dev.pontakorn.habitbudget.data.Transaction
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.WalletRepository
@@ -17,15 +18,16 @@ import javax.inject.Inject
 @HiltViewModel
 class UpdateTransactionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-//    val transactionRepository: TransactionRepository,
     fullTransactionRepository: FullTransactionRepository,
     walletRepository: WalletRepository,
-    categoryRepository: CategoryRepository
+    categoryRepository: CategoryRepository,
+    streakRepository: StreakRepository
 ) : EditTransactionViewModel(
     savedStateHandle,
     fullTransactionRepository,
     walletRepository,
-    categoryRepository
+    categoryRepository,
+    streakRepository
 ) {
 
     val transactionId = checkNotNull(savedStateHandle.get<Int>("transactionId"))
@@ -59,7 +61,11 @@ class UpdateTransactionViewModel @Inject constructor(
         }
 
         val actualTransactionTime =
-            DateUtil.getActualDate(uiState.value.transactionDate, uiState.value.transactionTime.first, uiState.value.transactionTime.second)
+            DateUtil.getActualDate(
+                uiState.value.transactionDate,
+                uiState.value.transactionTime.first,
+                uiState.value.transactionTime.second
+            )
         viewModelScope.launch {
 
             fullTransactionRepository.updateTransaction(
@@ -76,6 +82,13 @@ class UpdateTransactionViewModel @Inject constructor(
 
                 )
             )
+        }
+        viewModelScope.launch {
+            streakRepository.streaksExistToday().collect { exists ->
+                if (!exists) {
+                    streakRepository.insertForToday()
+                }
+            }
         }
     }
 

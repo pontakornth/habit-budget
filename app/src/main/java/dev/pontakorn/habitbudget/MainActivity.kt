@@ -34,7 +34,7 @@ import dev.pontakorn.habitbudget.data.CategoryType
 import dev.pontakorn.habitbudget.ui.categories.AddCategoryScreen
 import dev.pontakorn.habitbudget.ui.categories.ListCategoryScreen
 import dev.pontakorn.habitbudget.ui.categories.UpdateCategoryScreen
-import dev.pontakorn.habitbudget.ui.habit.HabitTracking
+import dev.pontakorn.habitbudget.ui.habit.HabitTrackingScreenContent
 import dev.pontakorn.habitbudget.ui.icons.IconSelectionScreen
 import dev.pontakorn.habitbudget.ui.icons.allIcons
 import dev.pontakorn.habitbudget.ui.setting.SettingsScreen
@@ -155,7 +155,7 @@ fun MainScreenWithNavbar(
 
             }
             composable(route = DestinationScreens.HabitTracking.route) {
-                HabitTracking()
+                HabitTrackingScreenContent()
             }
             composable(
                 route = DestinationScreens.Wallets.route,

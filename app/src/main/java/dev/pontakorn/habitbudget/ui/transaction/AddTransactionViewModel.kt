@@ -1,16 +1,15 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.data.CategoryRepository
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
+import dev.pontakorn.habitbudget.data.StreakRepository
 import dev.pontakorn.habitbudget.data.Transaction
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.WalletRepository
 import dev.pontakorn.habitbudget.utils.DateUtil.getActualDate
-import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedDate
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,12 +18,14 @@ class AddTransactionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     fullTransactionRepository: FullTransactionRepository,
     walletRepository: WalletRepository,
-    categoryRepository: CategoryRepository
+    categoryRepository: CategoryRepository,
+    streakRepository: StreakRepository
 ) : EditTransactionViewModel(
     savedStateHandle,
     fullTransactionRepository,
     walletRepository,
-    categoryRepository
+    categoryRepository,
+    streakRepository
 ) {
     override fun onConfirm() {
 //        Log.i("AddTransactionViewModel", "Create transaction")
@@ -44,7 +45,11 @@ class AddTransactionViewModel @Inject constructor(
         }
 
         val actualTransactionTime =
-            getActualDate(uiState.value.transactionDate, uiState.value.transactionTime.first, uiState.value.transactionTime.second)
+            getActualDate(
+                uiState.value.transactionDate,
+                uiState.value.transactionTime.first,
+                uiState.value.transactionTime.second
+            )
 
 
 
@@ -64,6 +69,13 @@ class AddTransactionViewModel @Inject constructor(
 
                 )
             )
+        }
+        viewModelScope.launch {
+            streakRepository.streaksExistToday().collect { exists ->
+                if (!exists) {
+                    streakRepository.insertForToday()
+                }
+            }
         }
 
     }

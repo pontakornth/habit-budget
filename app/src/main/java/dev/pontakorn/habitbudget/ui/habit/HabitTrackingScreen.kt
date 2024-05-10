@@ -16,13 +16,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pontakorn.habitbudget.DestinationScreens
+import androidx.hilt.navigation.compose.hiltViewModel
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import io.github.boguszpawlowski.composecalendar.StaticCalendar
 
 
 @Composable
-fun HabitTracking() {
+fun HabitTrackingScreen(
+    viewModel: HabitTrackingViewModel = hiltViewModel()
+) {}
+
+@Composable
+fun HabitTrackingScreenContent(
+    streakText: String = "",
+    showNoTransactionButton: Boolean = true,
+    onNoTransactionClick: () -> Unit = {}
+) {
     HabitBudgetTheme {
         Surface(
             modifier = Modifier
@@ -48,7 +57,7 @@ fun HabitTracking() {
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = onNoTransactionClick) {
                     Text(text = "I don't use money today.")
                 }
             }
@@ -59,5 +68,5 @@ fun HabitTracking() {
 @Preview(showBackground = true)
 @Composable
 fun HabitTrackingScreenPreview() {
-    HabitTracking()
+    HabitTrackingScreenContent()
 }
