@@ -7,7 +7,7 @@ import java.util.Date
 
 @Entity
 data class Streak(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo("streak_id")
     val streakId: Int,
     @ColumnInfo("streak_date")
