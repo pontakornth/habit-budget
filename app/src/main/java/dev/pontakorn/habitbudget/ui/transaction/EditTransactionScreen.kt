@@ -3,6 +3,7 @@
 package dev.pontakorn.habitbudget.ui.transaction
 
 import android.util.Log
+import android.widget.TimePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -22,14 +24,13 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,13 +44,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import dev.pontakorn.habitbudget.data.Category
 import dev.pontakorn.habitbudget.data.CategoryType
 import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
-import dev.pontakorn.habitbudget.ui.utils.TimePickerDialog
 import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedDate
 import dev.pontakorn.habitbudget.utils.DecimalFormatter
 import java.util.Calendar
@@ -109,9 +111,27 @@ fun EditTransactionScreen(
         Log.i("EditTransactionScreen", "UTC After: ${utcCalendar.timeInMillis}")
 
 
-        datePickerState.setSelection(utcCalendar.timeInMillis)
+//        datePickerState.setSelection(utcCalendar.timeInMillis)
     }
-    var timePickerState = rememberTimePickerState(initialHour = uiState.value.transactionTime.first, initialMinute =  uiState.value.transactionTime.second)
+    var hourState by remember {
+        mutableIntStateOf(uiState.value.transactionTime.first)
+    }
+    var minuteState by remember {
+        mutableIntStateOf(uiState.value.transactionTime.second)
+    }
+
+    LaunchedEffect(
+        key1 = uiState.value.transactionTime.first,
+        key2 = uiState.value.transactionTime.second
+    ) {
+        hourState = uiState.value.transactionTime.first
+        minuteState = uiState.value.transactionTime.second
+
+    }
+    var timePickerState = rememberTimePickerState(
+        initialHour = uiState.value.transactionTime.first,
+        initialMinute = uiState.value.transactionTime.second
+    )
     LaunchedEffect(key1 = timePickerState.hour, key2 = timePickerState.minute) {
 
         Log.d(
@@ -147,7 +167,14 @@ fun EditTransactionScreen(
         amountString = viewModel.amountString,
         onChangeAmountString = { viewModel.setNewAmountString(it) },
         datePickerState = datePickerState,
-        timePickerState = timePickerState,
+        hour = hourState,
+        minute = minuteState,
+        onTimeChange = { newHour, newMinute ->
+            hourState = newHour
+            minuteState = newMinute
+//            uiState.value.
+
+        },
         onConfirm = {
             viewModel.onConfirm()
             navController.popBackStack()
@@ -172,7 +199,9 @@ fun EditTransactionScreenContent(
     amountString: String = "0.0",
     onChangeAmountString: (String) -> Unit = {},
     datePickerState: DatePickerState,
-    timePickerState: TimePickerState,
+    hour: Int = 0,
+    minute: Int = 0,
+    onTimeChange: (Int, Int) -> Unit = { _, _ -> {}},
     onBack: () -> Unit = {},
     onConfirm: () -> Unit = {},
     allowConfirm: Boolean = true,
@@ -185,12 +214,16 @@ fun EditTransactionScreenContent(
     var showDatePicker by remember { mutableStateOf(false) }
 
     var showTimePicker by remember { mutableStateOf(false) }
+    // This allows reverting
+    var localHour by remember { mutableStateOf(hour) }
+    var localMinute by remember { mutableStateOf(minute) }
     val decimalFormatter = DecimalFormatter()
     val transactionTypes = listOf(
         TransactionType.EXPENSE,
         TransactionType.INCOME,
         TransactionType.TRANSFER
     )
+    var timePicker: TimePicker
     HabitBudgetTheme {
         Surface(
             modifier = Modifier
@@ -386,28 +419,59 @@ fun EditTransactionScreenContent(
                                 shape = RoundedCornerShape(size = 4.dp)
                             ) {
                                 Text(
-                                    text = timePickerState.hour.toString() + ":" + timePickerState.minute,
+                                    text = localHour.toString() + ":" + localMinute.toString(),
                                     textAlign = TextAlign.End
                                 )
                             }
                             if (showTimePicker) {
-                                TimePickerDialog(
-                                    title = "Choose transaction time",
+                                Dialog(
                                     onDismissRequest = { showTimePicker = false },
-                                    confirmButton = {
-                                        Button(onClick = { showTimePicker = false }) {
-                                            Text(text = "Confirm")
-                                        }
-                                    },
-                                    dismissButton = {
-                                        Button(onClick = { showTimePicker = false }) {
-                                            Text(text = "Cancel")
+                                ) {
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                    ) {
+                                        AndroidView(factory = { context ->
+                                            TimePicker(context).apply {
+                                                // Set initial state again
+                                                localHour = hour
+                                                setHour(localHour)
+                                                localMinute = minute
+                                                setMinute(localMinute)
+                                                setIs24HourView(true)
+                                                setOnTimeChangedListener { _, hour, minute ->
+                                                    localHour = hour
+                                                    localMinute = minute
+                                                }
+                                            }
+                                        })
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(32.dp),
+                                            horizontalArrangement = Arrangement.End,
+                                        ) {
+                                            Button(onClick = {
+                                                // Revert
+                                                localHour = hour
+                                                localMinute = minute
+                                                showTimePicker = false
+                                            }) {
+                                                Text(text = "Dismiss")
+                                            }
+                                            Button(onClick = {
+                                                // Commit
+                                                onTimeChange(localHour, localMinute)
+                                                showTimePicker = false
+                                            }) {
+                                                Text(text = "Confirm")
+                                            }
                                         }
                                     }
-
-                                ) {
-                                    TimePicker(state = timePickerState)
                                 }
+//
+//                                )
                             }
                         }
                     }
@@ -437,7 +501,8 @@ fun EditTransactionScreenContent(
 fun EditTransactionScreenPreview() {
     EditTransactionScreenContent(
         datePickerState = rememberDatePickerState(),
-        timePickerState = rememberTimePickerState()
+        hour = 0,
+        minute = 0
     )
 }
 
@@ -447,6 +512,7 @@ fun EditTransactionScreenTransferPreview() {
     EditTransactionScreenContent(
         transactionType = TransactionType.TRANSFER,
         datePickerState = rememberDatePickerState(),
-        timePickerState = rememberTimePickerState()
+        hour = 0,
+        minute = 0
     )
 }
