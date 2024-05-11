@@ -1,7 +1,6 @@
 package dev.pontakorn.habitbudget.ui.habit
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -35,9 +34,11 @@ fun HabitTrackingScreen(
     viewModel: HabitTrackingViewModel = hiltViewModel()
 ) {
     val streaks = viewModel.streaks.collectAsState()
+    val streakLength = viewModel.streakLength.collectAsState()
+    val hasStreakToday = viewModel.hasStreak.collectAsState()
     HabitTrackingScreenContent(
-        streakText = "4 days streak",
-        showNoTransactionButton = false,
+        streakText = "${streakLength.value} days streak",
+        showNoTransactionButton = hasStreakToday.value,
         streaks = streaks.value.map { it.streakDate.time },
         onNoTransactionClick = {
             Log.i("HabitTrackingScreen", "onNoTransactionClick")
@@ -71,7 +72,8 @@ fun HabitTrackingScreenContent(
                 // TODO: Streak logic
                 StaticCalendar(
                     dayContent = { day ->
-                        val pureDate = day.date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
+                        val pureDate =
+                            day.date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
                         val color = if (streaks.contains(pureDate)) {
                             Color.Green
                         } else Color.White
@@ -80,7 +82,7 @@ fun HabitTrackingScreenContent(
                                 .aspectRatio(1f)
                                 .padding(2.dp),
 //                            elevation = if (day.isFromCurrentMonth) 4.dp else 0.dp,
-                            border = if (day.isCurrentDay) BorderStroke(2.dp, color) else null,
+//                            border = if (day.isCurrentDay) BorderStroke(2.dp, color) else null,
                             colors = CardDefaults.cardColors(
                                 containerColor = color
                             )
@@ -90,14 +92,17 @@ fun HabitTrackingScreenContent(
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = day.date.dayOfMonth.toString())
+                                Text(
+                                    text = day.date.dayOfMonth.toString(),
+                                    fontWeight = if (day.isCurrentDay) FontWeight.Bold else FontWeight.Normal
+                                )
                             }
                         }
                     }
                 )
                 Text(
                     modifier = Modifier.padding(vertical = 24.dp),
-                    text = "4 days streak",
+                    text = streakText,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center

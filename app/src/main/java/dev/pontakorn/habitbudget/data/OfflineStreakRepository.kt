@@ -20,4 +20,8 @@ class OfflineStreakRepository(private val streakDao: StreakDao): StreakRepositor
         streakDao.insertStreak(streak)
 
     }
+
+    override fun getStreakLength(): Flow<Int> {
+        return streakDao.getStreakLength()
+    }
 }

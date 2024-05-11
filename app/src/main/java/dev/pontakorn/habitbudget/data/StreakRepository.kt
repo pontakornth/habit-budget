@@ -18,4 +18,6 @@ interface StreakRepository {
         insertStreak(Streak(0, calendar.time))
     }
 
+    fun getStreakLength(): Flow<Int>
+
 }
