@@ -26,6 +26,12 @@ class HabitTrackingViewModel @Inject constructor(
     private val _hasStreak = MutableStateFlow<Boolean>(false)
     val hasStreak = _hasStreak.asStateFlow()
 
+    fun onNoTransactionButtonClicked() {
+        viewModelScope.launch {
+            streakRepository.insertForToday()
+        }
+    }
+
     init {
         viewModelScope.launch {
             streakRepository.getAll().collect {

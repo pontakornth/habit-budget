@@ -1,6 +1,5 @@
 package dev.pontakorn.habitbudget.ui.habit
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -41,7 +40,7 @@ fun HabitTrackingScreen(
         showNoTransactionButton = !hasStreak.value,
         streaks = streaks.value.map { it.streakDate.time },
         onNoTransactionClick = {
-            Log.i("HabitTrackingScreen", "onNoTransactionClick")
+            viewModel.onNoTransactionButtonClicked()
         }
     )
 }
@@ -69,7 +68,6 @@ fun HabitTrackingScreenContent(
                     fontSize = 48.sp,
                     modifier = Modifier.fillMaxWidth()
                 )
-                // TODO: Streak logic
                 StaticCalendar(
                     dayContent = { day ->
                         val pureDate =
@@ -81,8 +79,6 @@ fun HabitTrackingScreenContent(
                             modifier = Modifier
                                 .aspectRatio(1f)
                                 .padding(2.dp),
-//                            elevation = if (day.isFromCurrentMonth) 4.dp else 0.dp,
-//                            border = if (day.isCurrentDay) BorderStroke(2.dp, color) else null,
                             colors = CardDefaults.cardColors(
                                 containerColor = color
                             )
