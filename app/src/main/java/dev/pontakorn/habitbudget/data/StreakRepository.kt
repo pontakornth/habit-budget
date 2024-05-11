@@ -6,7 +6,11 @@ import java.util.Calendar
 interface StreakRepository {
     fun getAll(): Flow<List<Streak>>
     suspend fun streaksExistToday(): Boolean
+    suspend fun streaksExistYesterday(): Boolean
     suspend fun insertStreak(streak: Streak)
+
+    fun streaksExistTodayFlow(): Flow<Boolean>
+    fun streaksExistYesterdayFlow(): Flow<Boolean>
 
     suspend fun insertForToday() {
         val calendar = Calendar.getInstance()

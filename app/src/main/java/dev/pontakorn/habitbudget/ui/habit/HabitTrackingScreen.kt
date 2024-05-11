@@ -35,10 +35,10 @@ fun HabitTrackingScreen(
 ) {
     val streaks = viewModel.streaks.collectAsState()
     val streakLength = viewModel.streakLength.collectAsState()
-    val hasStreakToday = viewModel.hasStreak.collectAsState()
+    val hasStreak = viewModel.hasStreak.collectAsState()
     HabitTrackingScreenContent(
-        streakText = "${streakLength.value} days streak",
-        showNoTransactionButton = hasStreakToday.value,
+        streakText = "${if (hasStreak.value) streakLength.value else 0} day(s) streak",
+        showNoTransactionButton = !hasStreak.value,
         streaks = streaks.value.map { it.streakDate.time },
         onNoTransactionClick = {
             Log.i("HabitTrackingScreen", "onNoTransactionClick")
@@ -107,8 +107,10 @@ fun HabitTrackingScreenContent(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                Button(onClick = onNoTransactionClick) {
-                    Text(text = "I don't use money today.")
+                if (showNoTransactionButton) {
+                    Button(onClick = onNoTransactionClick) {
+                        Text(text = "I don't use money today.")
+                    }
                 }
             }
         }

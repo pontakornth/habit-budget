@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pontakorn.habitbudget.data.Streak
 import dev.pontakorn.habitbudget.data.StreakRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,6 +18,11 @@ class HabitTrackingViewModel @Inject constructor(
     val streaks = _streaks.asStateFlow()
     private val _streakLength = MutableStateFlow<Int>(0)
     val streakLength = _streakLength.asStateFlow()
+//    private val _hasStreak = MutableStateFlow<Boolean>(false)
+//    val hasStreak = _hasStreak.asStateFlow()
+//    private val _hasStreakYesterday = MutableStateFlow<Boolean>(false)
+//    val hasStreakYesterday = _hasStreakYesterday.asStateFlow()
+
     private val _hasStreak = MutableStateFlow<Boolean>(false)
     val hasStreak = _hasStreak.asStateFlow()
 
@@ -33,8 +37,19 @@ class HabitTrackingViewModel @Inject constructor(
                 _streakLength.value = it
             }
         }
-        viewModelScope.launch(Dispatchers.IO) {
-            _hasStreak.value = streakRepository.streaksExistToday()
+        viewModelScope.launch {
+            streakRepository.streaksExistTodayFlow().collect {
+                if (!_hasStreak.value) {
+                    _hasStreak.value = it
+                }
+            }
+        }
+        viewModelScope.launch {
+            streakRepository.streaksExistYesterdayFlow().collect {
+                if (!_hasStreak.value) {
+                    _hasStreak.value = it
+                }
+            }
         }
     }
 

@@ -20,6 +20,10 @@ interface StreakDao {
     suspend fun hasStreak(date: Long): Int
 
     @DatabaseTransaction
+    @Query("SELECT COUNT(1) FROM streak WHERE streak_date = :date")
+    fun hasStreakFlow(date: Long): Flow<Int>
+
+    @DatabaseTransaction
     @Query(
         """WITH last_missing_day as (
             WITH day_with_diff as (
