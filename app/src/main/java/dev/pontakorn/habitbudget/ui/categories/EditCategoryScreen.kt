@@ -53,6 +53,7 @@ fun EditCategoryScreen(
         }
     }
     EditCategoryScreenContent(
+        title = "Edit Category",
         categoryName = viewModel.categoryName,
         onChangeCategoryName = {
             viewModel.categoryName = it
