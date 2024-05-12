@@ -4,15 +4,20 @@ package dev.pontakorn.habitbudget.ui.transaction
 
 import android.util.Log
 import android.widget.TimePicker
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -24,6 +29,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,7 +59,6 @@ import dev.pontakorn.habitbudget.data.TransactionType
 import dev.pontakorn.habitbudget.data.Wallet
 import dev.pontakorn.habitbudget.ui.theme.HabitBudgetTheme
 import dev.pontakorn.habitbudget.utils.DateUtil.getFormattedDate
-import dev.pontakorn.habitbudget.utils.DecimalFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -63,7 +69,9 @@ import java.util.TimeZone
 fun EditTransactionScreen(
     navController: NavController,
     viewModel: EditTransactionViewModel,
-    title: String
+    title: String,
+    showDeleteButton: Boolean = false,
+    onDeleteTransaction: () -> Unit = {},
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val walletIdFromNavController =
@@ -86,7 +94,7 @@ fun EditTransactionScreen(
     LaunchedEffect(key1 = categoryIdFromNavController) {
         viewModel.getCategory(categoryIdFromNavController)
     }
-    var datePickerState =
+    val datePickerState =
         rememberDatePickerState(initialSelectedDateMillis = uiState.value.transactionDate.time)
     LaunchedEffect(key1 = datePickerState.selectedDateMillis) {
         datePickerState.selectedDateMillis?.let {
@@ -166,7 +174,9 @@ fun EditTransactionScreen(
             viewModel.onConfirm()
             navController.popBackStack()
         },
-        allowConfirm = viewModel.allowAddTransaction()
+        allowConfirm = viewModel.allowAddTransaction(),
+        showDeleteButton = showDeleteButton,
+        onDeleteButtonClick = onDeleteTransaction
     )
 }
 
@@ -188,29 +198,34 @@ fun EditTransactionScreenContent(
     datePickerState: DatePickerState,
     hour: Int = 0,
     minute: Int = 0,
-    onTimeChange: (Int, Int) -> Unit = { _, _ -> {} },
+    onTimeChange: (Int, Int) -> Unit = { _, _ -> run {} },
     onBack: () -> Unit = {},
     onConfirm: () -> Unit = {},
     allowConfirm: Boolean = true,
+    showDeleteButton: Boolean = false,
+    onDeleteButtonClick: () -> Unit = {}
 ) {
 
     var transactionTypeDropdownOpen by remember {
         mutableStateOf(false)
     }
+    var deleteDialogOpen by remember {
+        mutableStateOf(false)
+    }
+    val scrollState = rememberScrollState()
 //    var datePickerState = rememberDatePickerState(initialSelectedDateMillis = transactionDate?.time)
     var showDatePicker by remember { mutableStateOf(false) }
 
     var showTimePicker by remember { mutableStateOf(false) }
     // This allows reverting
-    var localHour by remember { mutableStateOf(hour) }
-    var localMinute by remember { mutableStateOf(minute) }
-    val decimalFormatter = DecimalFormatter()
+    var localHour by remember { mutableIntStateOf(hour) }
+    var localMinute by remember { mutableIntStateOf(minute) }
     val transactionTypes = listOf(
         TransactionType.EXPENSE,
         TransactionType.INCOME,
         TransactionType.TRANSFER
     )
-    var timePicker: TimePicker
+
     HabitBudgetTheme {
         Surface(
             modifier = Modifier
@@ -220,7 +235,7 @@ fun EditTransactionScreenContent(
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
             ) {
                 Text(
                     text = title,
@@ -234,7 +249,8 @@ fun EditTransactionScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 32.dp),
+                        .scrollable(state = scrollState, orientation = Orientation.Vertical)
+                        .padding(top = 32.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Row(
@@ -462,17 +478,55 @@ fun EditTransactionScreenContent(
                             }
                         }
                     }
+                    if (deleteDialogOpen) {
+                        AlertDialog(
+                            onDismissRequest = { deleteDialogOpen = false },
+                            confirmButton = {
+                                Button(onClick = {
+                                    deleteDialogOpen = false
+                                    onDeleteButtonClick()
+                                }) {
+                                    Text(text = "Delete")
+                                }
+                            },
+                            title = {
+                                Text(text = "Delete transaction?")
+                            },
+                            text = {
+                                Text(text = "Are you sure you want to delete this transaction? This is not reversible.")
+                            },
+                            dismissButton = {
+                                Button(onClick = { deleteDialogOpen = false }) {
+                                    Text(text = "Cancel")
+                                }
+                            }
+
+                        )
+                    }
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 32.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = if (showDeleteButton) {
+                            Arrangement.spacedBy(16.dp, alignment = Alignment.End)
+                        } else Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom
                     ) {
+                        if (showDeleteButton) {
+                            TextButton(
+                                onClick = { deleteDialogOpen = true },
+                                colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
+                            ) {
+                                Text(text = "Delete")
+                            }
+                        }
                         Button(onClick = onBack) {
                             Text(text = "Back")
                         }
-                        Button(enabled = allowConfirm, onClick = onConfirm) {
+                        Button(
+                            enabled = allowConfirm,
+                            onClick = onConfirm,
+                        ) {
                             Text(text = "Confirm")
                         }
                     }
@@ -490,6 +544,17 @@ fun EditTransactionScreenPreview() {
         datePickerState = rememberDatePickerState(),
         hour = 0,
         minute = 0
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EditTransactionScreenWithDeletePreview() {
+    EditTransactionScreenContent(
+        datePickerState = rememberDatePickerState(),
+        hour = 0,
+        minute = 0,
+        showDeleteButton = true
     )
 }
 

@@ -12,6 +12,7 @@ fun AddTransactionScreen(
     EditTransactionScreen(
         navController = navController,
         viewModel = viewModel,
-        title = "Add Transaction"
+        title = "Add Transaction",
+        showDeleteButton = false
     )
 }

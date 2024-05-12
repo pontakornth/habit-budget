@@ -13,6 +13,8 @@ fun UpdateTransactionScreen(
     EditTransactionScreen(
         navController = navController,
         viewModel = viewModel,
-        title = "Edit Transaction"
+        title = "Edit Transaction",
+        showDeleteButton = true,
+        onDeleteTransaction = { viewModel.onDelete(navController)}
     )
 }

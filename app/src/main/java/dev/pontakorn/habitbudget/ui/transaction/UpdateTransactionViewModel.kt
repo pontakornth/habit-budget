@@ -2,7 +2,9 @@ package dev.pontakorn.habitbudget.ui.transaction
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.pontakorn.habitbudget.DestinationScreens
 import dev.pontakorn.habitbudget.data.CategoryRepository
 import dev.pontakorn.habitbudget.data.FullTransactionRepository
 import dev.pontakorn.habitbudget.data.StreakRepository
@@ -31,10 +33,12 @@ class UpdateTransactionViewModel @Inject constructor(
 ) {
 
     val transactionId = checkNotNull(savedStateHandle.get<Int>("transactionId"))
+    var transactionObject: Transaction? = null
 
     init {
         viewModelScope.launch {
             fullTransactionRepository.getById(transactionId).collect { fullTransaction ->
+                if (fullTransaction == null) return@collect
                 setState(
                     TransactionViewState(
                         transactionType = fullTransaction.transaction.transactionType,
@@ -46,6 +50,7 @@ class UpdateTransactionViewModel @Inject constructor(
                         transactionDate = getPureDate(fullTransaction.transaction.transactionTime),
                     )
                 )
+                transactionObject = fullTransaction.transaction
 
 
             }
@@ -84,6 +89,16 @@ class UpdateTransactionViewModel @Inject constructor(
             )
         }
         createStreak()
+    }
+
+    fun onDelete(navController: NavController) {
+        viewModelScope.launch {
+            navController.navigate(DestinationScreens.Transactions.route)
+            transactionObject?.let {
+                fullTransactionRepository.deleteTransaction(it)
+            }
+
+        }
     }
 
 }
